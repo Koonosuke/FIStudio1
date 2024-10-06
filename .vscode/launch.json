@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-SampleloginApplication<samplelogin>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.example.samplelogin.SampleloginApplication",
+      "projectName": "samplelogin",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
