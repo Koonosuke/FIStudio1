@@ -12,16 +12,16 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public BCryptPasswordEncoder passwordEncoder() {//パスワードのハッシュ化！！BCryptアルゴリズムを使用してる
+        return new BCryptPasswordEncoder();//SpringコンテナにBCryptPasswordEncoderのインスタンスを登録することを示しており、他の部分からこのインスタンスを使用可能！
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/login", "/api/register").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/api/login", "/api/register").permitAll()//リクエストは認証なしでアクセスを許可
+                .anyRequest().authenticated()//それ以外のすべてのリクエストは認証が必要
             )
             .formLogin(form -> form.disable());
         return http.build();
