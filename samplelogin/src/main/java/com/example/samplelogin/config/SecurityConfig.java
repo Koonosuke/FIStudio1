@@ -16,6 +16,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();//SpringコンテナにBCryptPasswordEncoderのインスタンスを登録することを示しており、他の部分からこのインスタンスを使用可能！
     }
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
@@ -23,12 +24,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/login", "/api/register").permitAll()//リクエストは認証なしでアクセスを許可
                 .anyRequest().authenticated()//それ以外のすべてのリクエストは認証が必要
             )
-            .formLogin(form -> form.disable());
+            .formLogin(form -> form.disable());//フォームベースのログインを無効化!この設定によって、Spring Securityがデフォルトで提供するログインフォームを使わないようにしてる
         return http.build();
     }
 }
-
-
-
-
-
