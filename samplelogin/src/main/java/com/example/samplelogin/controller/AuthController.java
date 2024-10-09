@@ -29,6 +29,7 @@ public class AuthController {
         if (userService.findByEmail(email) != null) {
             return "Email already in use";
         }
+
         User newUser = new User();
         newUser.setEmail(email);
         newUser.setUsername(username);
