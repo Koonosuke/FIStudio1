@@ -1,3 +1,4 @@
+//ユーザー情報の取得、パスワードの照合、およびユーザー情報の保存を
 package com.example.samplelogin.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import com.example.samplelogin.repository.UserRepository;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-
+    
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 

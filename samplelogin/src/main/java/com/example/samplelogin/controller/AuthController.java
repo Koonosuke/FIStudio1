@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.samplelogin.model.User;
 import com.example.samplelogin.service.UserService;
 
-@RestController
-@RequestMapping("/api")
+@RestController//RESTful APIを作成→エンドポイントの指定（リクエスト許可）により異なるシステム間でデータのやり取りが容易に
+@RequestMapping("/api")//コントローラーのエンドポイントは全て /api から始まる
 public class AuthController {
-    @Autowired
+    @Autowired//必要なクラスのインスタンスを自動
     private UserService userService;
 
     @PostMapping("/login")
