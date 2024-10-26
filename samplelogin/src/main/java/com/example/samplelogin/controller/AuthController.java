@@ -16,9 +16,9 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/login")
-    public String login(@RequestParam String email, @RequestParam String password) {
-        User user = userService.findByEmail(email);
-        if (user != null && userService.checkPassword(user, password)) {
+    public String login(@RequestParam String email, @RequestParam String password) {   
+        User user = userService.findByEmail(email);// emailでユーザーを検索 
+        if (user != null && userService.checkPassword(user, password)) {// ユーザーが存在し、パスワードが一致するかを確認
             return "Login successful";
         }
         return "Invalid email or password";
@@ -26,14 +26,17 @@ public class AuthController {
 
     @PostMapping("/register")
     public String register(@RequestParam String email, @RequestParam String username, @RequestParam String password) {
-        if (userService.findByEmail(email) != null) {
-            return "Email already in use";
+        if (userService.findByEmail(email) != null) {  // 入力されたemailが既に登録済みか確認
+            return "Email is already registered";
         }
+
+        // 新しいユーザーの情報を作成
 
         User newUser = new User();
         newUser.setEmail(email);
         newUser.setUsername(username);
         newUser.setPassword(password);
+        // 新しいユーザーを保存
         userService.saveUser(newUser);
         return "Registration successful";
     }
