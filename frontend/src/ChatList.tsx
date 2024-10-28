@@ -1,10 +1,16 @@
-// Frontend: ChatList.js
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./ChatList.css"; // スタイリング用のCSSを追加
 import Header from "./components/Header";
 
+// User型を定義
+interface User {
+  username: string;
+  email: string;
+}
+
 function ChatList() {
-  const [users, setUsers] = useState([]);
+  // usersの型をUser[]に指定
+  const [users, setUsers] = useState<User[]>([]);
   const currentUser = "current_user_email@example.com"; // Example current user email
 
   useEffect(() => {
@@ -26,7 +32,7 @@ function ChatList() {
       );
   }, []);
 
-  const handleDMClick = (userEmail) => {
+  const handleDMClick = (userEmail: string) => {
     // DMボタンがクリックされたときの処理
     console.log("Start DM with:", userEmail);
     // 必要に応じて、チャットページに遷移するなどの処理を実装
