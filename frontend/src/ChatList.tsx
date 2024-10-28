@@ -9,7 +9,7 @@ interface User {
 }
 
 function ChatList() {
-  // usersの型をUser[]に指定
+  // usersの型をUser[]に指定して配列として受け取る
   const [users, setUsers] = useState<User[]>([]);
   const currentUser = "current_user_email@example.com"; // Example current user email
 
