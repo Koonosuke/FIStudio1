@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:latest # PostgreSQLの公式イメージを使用
+    container_name: postgres_db # コンテナ名
+    environment:
+      POSTGRES_USER: postgres # ユーザー名
+      POSTGRES_PASSWORD: kishi1021 # パスワード
+      POSTGRES_DB: new_memos # データベース名
+    ports:
+      - "5432:5432" # ホストの5432ポートとコンテナの5432ポートをマッピング
+    volumes:
+      - db_data:/var/lib/postgresql/data # データの永続化（ホストに保存）
+
+volumes:
+  db_data: # 永続ボリュームの設定
