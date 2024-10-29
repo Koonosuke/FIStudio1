@@ -10,3 +10,5 @@ import com.example.samplelogin.model.User;
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
 }
+
+//データベースへのアクセスを担当する層

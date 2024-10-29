@@ -1,5 +1,5 @@
-import { useState } from "react"; //Reactのフックで、コンポーネント内で状態を管理
-import { useNavigate } from "react-router-dom"; //React Routerからのフック→ページの遷移
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
 function Login() {
@@ -8,20 +8,28 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    //asyncはavaScriptの非同期処理を行うための構文README.mdにて解説
-    const response = await fetch("http://localhost:8080/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded", //リクエストボディのデータの形式
-      },
-      body: new URLSearchParams({ email, password }), //key=value 形式でデータをURLエンコードするためのオブジェクト
-    });
+    try {
+      const response = await fetch("http://localhost:8080/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({ email, password }),
+      });
 
-    const text = await response.text();
-    if (text === "Login successful") {
-      navigate("/home");
-    } else {
-      alert("Invalid email or password");
+      if (response.ok) {
+        const text = await response.text();
+        if (text === "Admin login successful") {
+          navigate("/admin"); // 管理者専用画面
+        } else if (text === "Login successful") {
+          navigate("/home"); // 一般ユーザー用画面
+        }
+      } else {
+        alert("Invalid email or password");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      alert("Network error occurred. Please try again.");
     }
   };
 

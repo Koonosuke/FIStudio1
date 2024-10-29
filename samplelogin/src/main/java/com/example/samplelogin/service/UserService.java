@@ -29,3 +29,4 @@ public class UserService {
         return userRepository.save(user);
     }
 }
+//サービスはビジネスロジックを管理する層です。リポジトリを利用してデータを操作し、複雑な処理や条件分岐などのビジネスロジックを実装
