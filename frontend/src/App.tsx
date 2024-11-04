@@ -1,5 +1,5 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import Admins from "./Admins";
+import Admins from "./admin/Admins";
 import ChatList from "./ChatList";
 import Home from "./Home";
 import Login from "./Login";
@@ -18,5 +18,4 @@ function App() {
     </Router>
   );
 }
-
 export default App;

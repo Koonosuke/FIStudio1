@@ -1,5 +1,5 @@
 // src/Home.js
-import Header from "./components/Header";
+import Header from "../components/Header";
 
 function Admins() {
   return (

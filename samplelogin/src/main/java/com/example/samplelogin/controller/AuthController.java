@@ -17,7 +17,6 @@ public class AuthController {
     @Autowired//必要なクラスのインスタンスを自動
     private UserService userService;
 
-
       @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password) {   
         User user = userService.findByEmail(email);// emailでユーザーを検索 

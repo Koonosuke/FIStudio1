@@ -12,7 +12,7 @@ function Login() {
       const response = await fetch("http://localhost:8080/api/login", {
         method: "POST",
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Type": "application/x-www-form-urlencoded", //例：http://localhost:8080/api/login/email=実際に入力されたメール?password=暗号化されたパスワード
         },
         body: new URLSearchParams({ email, password }),
       });

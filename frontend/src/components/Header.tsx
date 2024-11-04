@@ -4,7 +4,7 @@ import "./Header.css";
 function Header() {
   return (
     <header className="header">
-      <div className="logo">FI STUDIO</div>
+      <div className="logo">FI STUDIO管理画面</div>
       <nav className="nav">
         <ul>
           <li>
