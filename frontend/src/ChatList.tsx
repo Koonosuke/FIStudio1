@@ -1,17 +1,18 @@
+// Chat.tsx - チャットリスト画面
 import { useEffect, useState } from "react";
-import "./ChatList.css"; // スタイリング用のCSSを追加
+import { useNavigate } from "react-router-dom";
+import "./ChatList.css";
 import Header from "./components/Header";
 
-// User型を定義
 interface User {
   username: string;
   email: string;
 }
 
 function ChatList() {
-  // usersの型をUser[]に指定して配列として受け取る
   const [users, setUsers] = useState<User[]>([]);
-  const currentUser = "current_user_email@example.com"; // Example current user email
+  const navigate = useNavigate();
+  const currentUserEmail = "kishi@1021gmai.com"; // ログインしているユーザーのメールアドレス
 
   useEffect(() => {
     fetch("http://localhost:8080/api/users", {
@@ -20,12 +21,7 @@ function ChatList() {
         "Content-Type": "application/json",
       },
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((data) => setUsers(data))
       .catch((error) =>
         console.error("There was a problem with the fetch operation:", error)
@@ -33,9 +29,7 @@ function ChatList() {
   }, []);
 
   const handleDMClick = (userEmail: string) => {
-    // DMボタンがクリックされたときの処理
-    console.log("Start DM with:", userEmail);
-    // 必要に応じて、チャットページに遷移するなどの処理を実装
+    navigate(`/direct-message/${userEmail}`);
   };
 
   return (
@@ -45,7 +39,7 @@ function ChatList() {
         <h2>Direct Messages</h2>
         <div className="user-cards">
           {users
-            .filter((user) => user.email !== currentUser)
+            .filter((user) => user.email !== currentUserEmail)
             .map((user) => (
               <div className="user-card" key={user.email}>
                 <h3>{user.username}</h3>

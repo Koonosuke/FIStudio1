@@ -1,10 +1,10 @@
 // src/Home.js
-import Header from "../components/Header";
+import HeaderAdmin from "../components/HeaderAdmin";
 
 function Admins() {
   return (
     <div>
-      <Header />
+      <HeaderAdmin />
 
       <h2>Welcome to FI STUDIO</h2>
     </div>

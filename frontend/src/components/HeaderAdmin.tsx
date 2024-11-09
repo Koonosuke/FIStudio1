@@ -4,7 +4,7 @@ import "./Header.css";
 function HeaderAdmin() {
   return (
     <header className="header">
-      <div className="logo">FI STUDIO</div>
+      <div className="logo">FI STUDIO 管理者</div>
       <nav className="nav">
         <ul>
           <li>

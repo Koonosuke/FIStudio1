@@ -2,12 +2,17 @@
 // MessageController.java - メッセージコントローラー
 package com.example.samplelogin.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.example.samplelogin.model.Message;
 import com.example.samplelogin.service.MessageService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/messages")
@@ -21,7 +26,8 @@ public class MessageController {
     }
 
     @GetMapping("/conversation")
-    public List<Message> getConversation(@RequestParam String senderEmail, @RequestParam String receiverEmail) {
-        return messageService.getMessagesBetweenUsers(senderEmail, receiverEmail);
+    public List<Message> getConversation(@RequestParam String userEmail1, @RequestParam String userEmail2) {
+        return messageService.getMessagesBetweenUsers(userEmail1, userEmail2);
+        
     }
 }
