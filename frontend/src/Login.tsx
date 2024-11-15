@@ -32,7 +32,6 @@ function Login() {
       alert("Network error occurred. Please try again.");
     }
   };
-
   const handleSignup = () => {
     navigate("/register");
   };

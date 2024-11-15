@@ -12,7 +12,7 @@ interface User {
 function ChatList() {
   const [users, setUsers] = useState<User[]>([]);
   const navigate = useNavigate();
-  const currentUserEmail = "kishi@1021gmai.com"; // ログインしているユーザーのメールアドレス
+  const currentUserEmail = "22fi041@ms.dendai.ac.jp"; // ログインしているユーザーのメールアドレス
 
   useEffect(() => {
     fetch("http://localhost:8080/api/users", {

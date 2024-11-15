@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,10 +12,14 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+@EnableWebSocketMessageBroker
+public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -26,7 +31,7 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())  // CSRF保護の無効化
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))  // CORS設定
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/login", "/api/register", "/api/users", "/api/messages/**", "/admin").permitAll() // 認証なしでアクセス許可
+                .requestMatchers("/api/login", "/api/register", "/api/users", "/api/messages/**", "/admin", "/ws/**").permitAll() // 認証なしでアクセス許可
                 .anyRequest().authenticated()  // 他は認証が必要
             )
             .formLogin(form -> form.disable());
@@ -45,5 +50,16 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/api/**", configuration);
         source.registerCorsConfiguration("/admin", configuration); // /admin パスにもCORS設定を適用
         return source;
+    }
+
+    @Override
+    public void configureMessageBroker(@SuppressWarnings("null") MessageBrokerRegistry config) {
+        config.enableSimpleBroker("/topic");
+        config.setApplicationDestinationPrefixes("/app");
+    }
+
+    @Override
+    public void registerStompEndpoints(@SuppressWarnings("null") StompEndpointRegistry registry) {
+        registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS();
     }
 }

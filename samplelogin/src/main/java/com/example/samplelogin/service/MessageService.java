@@ -23,6 +23,7 @@ public class MessageService {
         message.setContent(content);
         message.setSentAt(LocalDateTime.now());
         return messageRepository.save(message);
+       // message.setSenderEmail(senderEmail);
     }
 
     public List<Message> getMessagesBetweenUsers(String userEmail1, String userEmail2) {
