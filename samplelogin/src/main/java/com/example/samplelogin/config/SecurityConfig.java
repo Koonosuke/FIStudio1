@@ -28,16 +28,16 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())  // CSRF保護の無効化
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))  // CORS設定
+        http.csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/login", "/api/register", "/api/users", "/api/messages/**", "/admin", "/ws/**").permitAll() // 認証なしでアクセス許可
-                .anyRequest().authenticated()  // 他は認証が必要
+                .requestMatchers("/api/login", "/api/register", "/api/users", "/api/messages/**", "/api/subjects/**","/api/subjects/{subjectId}/contents/**", "/admin", "/ws/**").permitAll() 
+                .anyRequest().authenticated()
             )
             .formLogin(form -> form.disable());
         return http.build();
     }
-
+    
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -45,21 +45,20 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
-        
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", configuration);
-        source.registerCorsConfiguration("/admin", configuration); // /admin パスにもCORS設定を適用
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
     @Override
-    public void configureMessageBroker(@SuppressWarnings("null") MessageBrokerRegistry config) {
+    public void configureMessageBroker(MessageBrokerRegistry config) {
         config.enableSimpleBroker("/topic");
         config.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
-    public void registerStompEndpoints(@SuppressWarnings("null") StompEndpointRegistry registry) {
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS();
     }
 }
