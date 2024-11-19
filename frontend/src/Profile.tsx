@@ -1,0 +1,82 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Header from "./components/Header";
+import "./Profile.css";
+
+interface User {
+    username: string;
+    email: string;
+}
+
+function Profile(){
+const [user, setUser] = useState<User>();
+const navigate = useNavigate();
+
+const HandleProfileClic =() =>{
+    navigate("/profile");
+}
+
+const HandleEditClic = () => {
+    navigate("/profile/edit");
+};
+
+const HandleReviewClic = () => {
+    navigate("/profile/review");
+}
+
+const HandleAdminClic = () => {
+    navigate("/profile/admin");
+} 
+
+useEffect(() =>{
+    fetch("http://localhost:8080/api/user", {
+        method: "GET",
+        credentials: "include",
+    })
+        .then((response) => {
+        if (!response.ok) {
+            throw new Error("User data fetch failed");
+        }
+        return response.json();
+        })
+        .then((data) => setUser(data))
+        .catch((error) => {
+        console.error("Error fetching user info:", error);
+          // エラー時にユーザーをログインページにリダイレクト
+        alert("Time's overed. Please login again.");
+        navigate("/");
+        });
+    }, [navigate]);
+
+    return(
+    <div>
+        <Header/>
+        <div id="profile-screen">
+            <div id="main-contents">
+                <h1>Profile</h1>
+                <p>Username: {user?.username}</p>
+                <p>Email: {user?.email}</p>
+            </div>
+
+            <div id="buttons">
+                <div className="button" onClick={() => HandleProfileClic()}>
+                    <p>Home</p>
+                </div>
+                <div className="button" onClick={() => HandleEditClic()}>
+                    <p>Edit</p>
+                </div>
+                <div className="button" onClick={() => HandleReviewClic()}>
+                    <p>Review</p>
+                </div>
+                <div className="button" onClick={() => HandleAdminClic()}>
+                    <p>Admin</p>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+    );
+}
+
+export default Profile;
