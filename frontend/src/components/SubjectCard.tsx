@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface Content {
   id: number;
@@ -29,6 +29,15 @@ const SubjectCard: React.FC<Subject> = ({
   const [newEvaluation, setNewEvaluation] = useState(0);
   const [newPastExams, setNewPastExams] = useState("");
   const [userId, setUserId] = useState(""); // ユーザーIDを管理するための状態追加
+  const [currentContents, setCurrentContents] = useState(contents); // 現在のコンテンツを管理する状態を追加
+
+  useEffect(() => {
+    // 初回レンダリング時に、特定の科目に関連する全ての投稿を取得する
+    fetch(`http://localhost:8080/api/subjects/${id}/contents`)
+      .then((response) => response.json())
+      .then((data) => setCurrentContents(data))
+      .catch((error) => console.error("Error fetching contents:", error));
+  }, [id]);
 
   const handleAddContent = async () => {
     try {
@@ -53,6 +62,11 @@ const SubjectCard: React.FC<Subject> = ({
 
       if (response.ok) {
         console.log("Content added successfully");
+        // 新しい投稿を追加した後に全ての投稿を再取得して反映
+        const updatedContents = await fetch(
+          `http://localhost:8080/api/subjects/${id}/contents`
+        ).then((res) => res.json());
+        setCurrentContents(updatedContents);
       } else {
         console.error("Error adding content:", response.statusText);
       }
@@ -96,8 +110,8 @@ const SubjectCard: React.FC<Subject> = ({
       )}
       <div className="contents-list">
         <h4>投稿内容:</h4>
-        {contents.length > 0 ? (
-          contents.map((content) => (
+        {currentContents.length > 0 ? (
+          currentContents.map((content) => (
             <div key={content.id} className="content-item">
               <p>{content.content}</p>
               <p>評価: {content.evaluation} / 5</p>
