@@ -42,3 +42,8 @@ hr{
 .hr1{
   border-top: 1px solid #ffffff;
 }
+
+body{
+  background-color: #003b46;
+  background-size: cover;
+}
