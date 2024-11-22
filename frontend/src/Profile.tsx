@@ -9,7 +9,7 @@ interface User {
 }
 
 function Profile(){
-const [user, setUser] = useState<User>();
+const [user, setUser] = useState<User | null>(null);
 const navigate = useNavigate();
 
 const HandleProfileClic =() =>{
@@ -29,7 +29,7 @@ const HandleAdminClic = () => {
 } 
 
 useEffect(() =>{
-    fetch("http://localhost:8080/api/user", {
+    const response =  fetch("http://localhost:8080/api/user", {
         method: "GET",
         credentials: "include",
     })
@@ -39,14 +39,19 @@ useEffect(() =>{
         }
         return response.json();
         })
-        .then((data) => setUser(data))
+        .then((data) => {
+            setUser({username: data.username, email: data.email });
+        })
         .catch((error) => {
         console.error("Error fetching user info:", error);
           // エラー時にユーザーをログインページにリダイレクト
-        alert("Time's overed. Please login again.");
-        navigate("/");
+        //alert("Time's overed. Please login again.");
+        //navigate("/");
         });
-    }, [navigate]);
+
+
+
+    }, []);
 
     return(
     <div>
@@ -54,8 +59,8 @@ useEffect(() =>{
         <div id="profile-screen">
             <div id="main-contents">
                 <h1>Profile</h1>
-                <p>Username: {user?.username}</p>
-                <p>Email: {user?.email}</p>
+                <p>Username: {user?.username || "Not available"}</p>
+                <p>Email: {user?.email || "Not available"}</p>
             </div>
 
             <div id="buttons">
