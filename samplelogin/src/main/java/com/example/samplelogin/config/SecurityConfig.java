@@ -31,10 +31,11 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
         http.csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/login", "/api/register", "/api/users", "/api/messages/**", "/api/subjects/**","/api/subjects/{subjectId}/contents/**", "/admin", "/ws/**").permitAll() 
+                .requestMatchers("/api/login", "/api/register", "/api/users",  "/api/user","/api/messages/**", "/api/subjects/**", "/api/subjects/{subjectId}/contents/**", "/admin", "/ws/**").permitAll()
                 .anyRequest().authenticated()
             )
-            .formLogin(form -> form.disable());
+            .formLogin(form -> form.disable())
+            .sessionManagement(session -> session.maximumSessions(1)); // セッション管理を追加
         return http.build();
     }
     
@@ -44,7 +45,7 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
         configuration.setAllowedOrigins(List.of("http://localhost:3000"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);
+        configuration.setAllowCredentials(true); // セッション情報を送信可能にする
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -59,6 +60,8 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS();
+        registry.addEndpoint("/ws")
+                .setAllowedOriginPatterns("*") // WebSocketのCORSを許可
+                .withSockJS();
     }
 }
