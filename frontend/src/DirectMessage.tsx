@@ -16,12 +16,31 @@ function DirectMessage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [isConnected, setIsConnected] = useState(false);
-  const currentUserEmail = "22fi041@ms.dendai.ac.jp"; // ログインしているユーザーのメールアドレス
+  const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(null); // セッションから取得するログインユーザー
   const stompClientRef = useRef<Client | null>(null);
 
   useEffect(() => {
+    // ログイン中のユーザーを取得
+    fetch("http://localhost:8080/api/user", {
+      method: "GET",
+      credentials: "include", // セッション情報を送信
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Failed to fetch current user");
+      })
+      .then((data) => setCurrentUserEmail(data.email))
+      .catch((error) => console.error("Error fetching current user:", error));
+  }, []);
+
+  useEffect(() => {
     // 過去のメッセージを取得
-    if (receiverEmail) {
+    if (receiverEmail && currentUserEmail) {
       fetch(
         `http://localhost:8080/api/messages/conversation?userEmail1=${currentUserEmail}&userEmail2=${receiverEmail}`
       )
@@ -62,14 +81,15 @@ function DirectMessage() {
         setIsConnected(false);
       }
     };
-  }, [receiverEmail]);
+  }, [receiverEmail, currentUserEmail]);
 
   const handleSendMessage = () => {
     if (
       newMessage.trim() &&
       receiverEmail &&
       isConnected &&
-      stompClientRef.current?.connected
+      stompClientRef.current?.connected &&
+      currentUserEmail // currentUserEmail をチェック
     ) {
       const message = {
         senderEmail: currentUserEmail,
@@ -86,7 +106,7 @@ function DirectMessage() {
       setNewMessage("");
     } else {
       console.error(
-        "WebSocket connection is not established or message is empty."
+        "WebSocket connection is not established, message is empty, or currentUserEmail is null."
       );
     }
   };
