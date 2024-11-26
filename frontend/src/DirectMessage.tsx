@@ -2,6 +2,7 @@ import { Client } from "@stomp/stompjs";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import SockJS from "sockjs-client";
+import "./DirectMessage.css";
 
 interface Message {
   id: number;
@@ -112,11 +113,16 @@ function DirectMessage() {
   };
 
   return (
-    <div>
+    <div className="chat-container">
       <h2>Direct Messages with {receiverEmail}</h2>
       <div className="message-list">
         {messages.map((message, index) => (
-          <div key={index} className="message-item">
+          <div
+            key={index}
+            className={`message-item ${
+              message.senderEmail === currentUserEmail ? "sent" : "received"
+            }`}
+          >
             <p>
               <strong>{message.senderEmail}:</strong> {message.content}
             </p>
