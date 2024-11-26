@@ -1,5 +1,6 @@
 import { Client } from "@stomp/stompjs";
 import { useEffect, useRef, useState } from "react";
+import { FaPaperPlane } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import SockJS from "sockjs-client";
 import "./DirectMessage.css";
@@ -12,12 +13,18 @@ interface Message {
   sentAt: string;
 }
 
+interface User {
+  username: string;
+  email: string;
+}
+
 function DirectMessage() {
   const { receiverEmail } = useParams<{ receiverEmail: string }>();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [isConnected, setIsConnected] = useState(false);
   const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(null); // セッションから取得するログインユーザー
+  const [receiverUsername, setReceiverUsername] = useState<string | null>(null); // チャット相手のユーザー名
   const stompClientRef = useRef<Client | null>(null);
 
   useEffect(() => {
@@ -38,6 +45,28 @@ function DirectMessage() {
       .then((data) => setCurrentUserEmail(data.email))
       .catch((error) => console.error("Error fetching current user:", error));
   }, []);
+
+  useEffect(() => {
+    // チャット相手のユーザー情報を取得
+    if (receiverEmail) {
+      fetch(`http://localhost:8080/api/user/${receiverEmail}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error("Failed to fetch receiver's user data");
+        })
+        .then((data: User) => setReceiverUsername(data.username))
+        .catch((error) =>
+          console.error("Error fetching receiver's user data:", error)
+        );
+    }
+  }, [receiverEmail]);
 
   useEffect(() => {
     // 過去のメッセージを取得
@@ -114,7 +143,10 @@ function DirectMessage() {
 
   return (
     <div className="chat-container">
-      <h2>Direct Messages with {receiverEmail}</h2>
+      <h2>
+        Direct Messages with{" "}
+        {receiverUsername ? receiverUsername : receiverEmail}
+      </h2>
       <div className="message-list">
         {messages.map((message, index) => (
           <div
@@ -124,7 +156,13 @@ function DirectMessage() {
             }`}
           >
             <p>
-              <strong>{message.senderEmail}:</strong> {message.content}
+              <strong>
+                {message.senderEmail === currentUserEmail
+                  ? "You"
+                  : receiverUsername || message.senderEmail}
+                :
+              </strong>{" "}
+              {message.content}
             </p>
             <small>{message.sentAt}</small>
           </div>
@@ -137,7 +175,7 @@ function DirectMessage() {
           onChange={(e) => setNewMessage(e.target.value)}
         />
         <button onClick={handleSendMessage} disabled={!isConnected}>
-          Send
+          <FaPaperPlane />
         </button>
       </div>
     </div>

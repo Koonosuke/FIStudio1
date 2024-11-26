@@ -19,9 +19,11 @@
 .message-item {
   max-width: 60%;
   border-radius: 20px;
-  padding: 10px 15px;
+  padding: 20px 25px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   word-wrap: break-word;
+  position: relative;
+  font-size: 1.2em;
 }
 
 .message-item.received {
@@ -37,18 +39,48 @@
   text-align: right;
 }
 
+.message-item::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 0;
+  height: 0;
+}
+
+.message-item.received::after {
+  left: -10px;
+  border: 10px solid transparent;
+  border-top-color: #ffffff;
+  border-bottom: 0;
+  border-right: 0;
+  margin-left: -10px;
+}
+
+.message-item.sent::after {
+  right: -10px;
+  border: 10px solid transparent;
+  border-top-color: #dcf8c6;
+  border-bottom: 0;
+  border-left: 0;
+  margin-right: -10px;
+}
+
 .message-input {
   display: flex;
+  align-items: center;
   gap: 10px;
   padding: 20px;
   border-top: 1px solid #ccc;
   background-color: #ecf0f1;
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
 }
 
 .message-input input {
   flex: 1;
-  padding: 10px;
-  border-radius: 20px;
+  padding: 15px;
+  border-radius: 25px;
   border: 1px solid #ccc;
   background-color: #ffffff;
 }
@@ -57,11 +89,14 @@
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 50%;
-  padding: 10px;
+  border-radius: 8px;
+  padding: 12px;
   cursor: pointer;
-  width: 40px;
-  height: 40px;
+  width: 80px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .message-input button:hover {
@@ -73,4 +108,24 @@
   color: #888;
   text-align: center;
   margin-top: 20px;
+}
+
+/* メディアクエリを使用して送信ボタンの配置を改善 */
+@media (max-width: 600px) {
+  .message-input {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .message-input button {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+
+@media (min-width: 601px) {
+  .message-input {
+    flex-direction: row;
+    align-items: center;
+  }
 }
