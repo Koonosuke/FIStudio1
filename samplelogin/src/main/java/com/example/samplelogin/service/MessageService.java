@@ -3,7 +3,9 @@ package com.example.samplelogin.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,14 @@ public class MessageService {
         message.setContent(content);
         message.setSentAt(LocalDateTime.now());
         return messageRepository.save(message);
-       // message.setSenderEmail(senderEmail);
+    }
+
+    public Optional<Message> getLatestMessageBetweenUsers(String userEmail1, String userEmail2) {
+        List<Message> messagesFromUser1ToUser2 = messageRepository.findBySenderEmailAndReceiverEmail(userEmail1, userEmail2);
+        List<Message> messagesFromUser2ToUser1 = messageRepository.findBySenderEmailAndReceiverEmail(userEmail2, userEmail1);
+        messagesFromUser1ToUser2.addAll(messagesFromUser2ToUser1);
+        return messagesFromUser1ToUser2.stream()
+                .max(Comparator.comparing(Message::getSentAt));
     }
 
     public List<Message> getMessagesBetweenUsers(String userEmail1, String userEmail2) {

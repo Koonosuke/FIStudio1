@@ -8,9 +8,17 @@ interface User {
   email: string;
 }
 
+interface LatestMessage {
+  receiverEmail: string;
+  content: string;
+}
+
 function ChatList() {
   const [users, setUsers] = useState<User[]>([]);
   const [currentUser, setCurrentUser] = useState<User | null>(null); // ログインユーザー情報
+  const [latestMessages, setLatestMessages] = useState<{
+    [key: string]: string;
+  }>({}); // 最新メッセージのマップ
   const navigate = useNavigate();
 
   // ログイン中のユーザーを取得
@@ -48,6 +56,36 @@ function ChatList() {
       );
   }, []);
 
+  // 各ユーザーの最新メッセージを取得
+  useEffect(() => {
+    if (currentUser) {
+      users.forEach((user) => {
+        if (user.email !== currentUser.email) {
+          fetch(
+            `http://localhost:8080/api/messages/latest?userEmail1=${currentUser.email}&userEmail2=${user.email}`,
+            {
+              method: "GET",
+              credentials: "include", // セッションを含める
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+            .then((response) => response.json())
+            .then((data: LatestMessage) => {
+              setLatestMessages((prev) => ({
+                ...prev,
+                [user.email]: data.content,
+              }));
+            })
+            .catch((error) =>
+              console.error("Error fetching latest message:", error)
+            );
+        }
+      });
+    }
+  }, [currentUser, users]);
+
   const handleDMClick = (userEmail: string) => {
     navigate(`/direct-message/${userEmail}`);
   };
@@ -64,6 +102,9 @@ function ChatList() {
               <div className="user-card" key={user.email}>
                 <h3>{user.username}</h3>
                 <p>{user.email}</p>
+                <p className="latest-message">
+                  {latestMessages[user.email] || "メッセージはありません"}
+                </p>
                 <button
                   onClick={() => handleDMClick(user.email)}
                   className="dm-button"

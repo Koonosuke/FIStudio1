@@ -24,5 +24,4 @@ public class MessageController {
         // メッセージをデータベースに保存
         messageService.saveMessage(message.getSenderEmail(), message.getReceiverEmail(), message.getContent());
         return message;
-    }
-}
+    }}
