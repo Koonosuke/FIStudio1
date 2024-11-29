@@ -24,4 +24,14 @@ public class MessageController {
         // メッセージをデータベースに保存
         messageService.saveMessage(message.getSenderEmail(), message.getReceiverEmail(), message.getContent());
         return message;
-    }}
+    }
+    @MessageMapping("/chat.markAsRead")
+    @SendTo("/topic/read-status")
+    public Long markAsReadWebSocket(Long messageId) {
+        boolean isUpdated = messageService.markMessageAsRead(messageId);
+        if (isUpdated) {
+            return messageId;
+        }
+        return null;
+    }
+}

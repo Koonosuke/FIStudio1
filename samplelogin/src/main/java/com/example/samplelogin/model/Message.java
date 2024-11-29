@@ -29,11 +29,17 @@ public class Message {
     @Column(nullable = false)
     private LocalDateTime sentAt;
 
+    @Column(nullable = false)
+    private String status; // read or unread
+
     // Getters and Setters
     public Long getId() {
         return id;
     }
-    
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getSenderEmail() {
         return senderEmail;
@@ -65,5 +71,13 @@ public class Message {
 
     public void setSentAt(LocalDateTime sentAt) {
         this.sentAt = sentAt;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

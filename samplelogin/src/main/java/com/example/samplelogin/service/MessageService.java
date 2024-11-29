@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.samplelogin.model.Message;
 import com.example.samplelogin.repository.MessageRepository;
-
 @Service
 public class MessageService {
     @Autowired
@@ -24,6 +23,7 @@ public class MessageService {
         message.setReceiverEmail(receiverEmail);
         message.setContent(content);
         message.setSentAt(LocalDateTime.now());
+        message.setStatus("unread");
         return messageRepository.save(message);
     }
 
@@ -43,5 +43,18 @@ public class MessageService {
         allMessages.addAll(messagesFromUser2ToUser1);
         allMessages.sort((m1, m2) -> m1.getSentAt().compareTo(m2.getSentAt()));
         return allMessages;
+    }
+
+    public boolean markMessageAsRead(Long messageId) {
+        Optional<Message> messageOpt = messageRepository.findById(messageId);
+        if (messageOpt.isPresent()) {
+            Message message = messageOpt.get();
+            if ("unread".equals(message.getStatus())) {
+                message.setStatus("read");
+                messageRepository.save(message);
+                return true;
+            }
+        }
+        return false;
     }
 }

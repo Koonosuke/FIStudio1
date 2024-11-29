@@ -11,11 +11,7 @@ interface Message {
   receiverEmail: string;
   content: string;
   sentAt: string;
-}
-
-interface User {
-  username: string;
-  email: string;
+  status: string;
 }
 
 function DirectMessage() {
@@ -23,15 +19,14 @@ function DirectMessage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [isConnected, setIsConnected] = useState(false);
-  const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(null); // セッションから取得するログインユーザー
-  const [receiverUsername, setReceiverUsername] = useState<string | null>(null); // チャット相手のユーザー名
+  const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(null);
   const stompClientRef = useRef<Client | null>(null);
 
   useEffect(() => {
     // ログイン中のユーザーを取得
     fetch("http://localhost:8080/api/user", {
       method: "GET",
-      credentials: "include", // セッション情報を送信
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -47,35 +42,27 @@ function DirectMessage() {
   }, []);
 
   useEffect(() => {
-    // チャット相手のユーザー情報を取得
-    if (receiverEmail) {
-      fetch(`http://localhost:8080/api/user/${receiverEmail}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error("Failed to fetch receiver's user data");
-        })
-        .then((data: User) => setReceiverUsername(data.username))
-        .catch((error) =>
-          console.error("Error fetching receiver's user data:", error)
-        );
-    }
-  }, [receiverEmail]);
-
-  useEffect(() => {
     // 過去のメッセージを取得
     if (receiverEmail && currentUserEmail) {
       fetch(
         `http://localhost:8080/api/messages/conversation?userEmail1=${currentUserEmail}&userEmail2=${receiverEmail}`
       )
         .then((response) => response.json())
-        .then((data) => setMessages(data))
+        .then((data) => {
+          if (data) {
+            setMessages(data);
+            // 未読メッセージを既読に変更
+            data.forEach((message: Message) => {
+              if (
+                message &&
+                message.receiverEmail === currentUserEmail &&
+                message.status === "unread"
+              ) {
+                markMessageAsRead(message.id);
+              }
+            });
+          }
+        })
         .catch((error) =>
           console.error("Error fetching past messages:", error)
         );
@@ -86,16 +73,28 @@ function DirectMessage() {
     const stompClient = new Client({
       webSocketFactory: () => socket,
       onConnect: () => {
-        setIsConnected(true); // 接続が確立されたことを設定
+        setIsConnected(true);
         stompClient.subscribe("/topic/public", (message) => {
           if (message.body) {
             const receivedMessage = JSON.parse(message.body) as Message;
-            setMessages((prevMessages) => [...prevMessages, receivedMessage]);
+            if (receivedMessage) {
+              setMessages((prevMessages) => [...prevMessages, receivedMessage]);
+            }
+          }
+        });
+        stompClient.subscribe("/topic/read-status", (message) => {
+          if (message.body) {
+            const messageId = JSON.parse(message.body) as number;
+            setMessages((prevMessages) =>
+              prevMessages.map((msg) =>
+                msg.id === messageId ? { ...msg, status: "read" } : msg
+              )
+            );
           }
         });
       },
       onDisconnect: () => {
-        setIsConnected(false); // 接続が切断されたときの処理
+        setIsConnected(false);
       },
       onStompError: (error) => {
         console.error("STOMP Error", error);
@@ -113,19 +112,38 @@ function DirectMessage() {
     };
   }, [receiverEmail, currentUserEmail]);
 
+  // メッセージを既読にする処理
+  const markMessageAsRead = (messageId: number) => {
+    fetch(
+      `http://localhost:8080/api/messages/mark-as-read?messageId=${messageId}`,
+      {
+        method: "POST",
+      }
+    )
+      .then(() => {
+        // 既読状態をリアルタイムで通知
+        stompClientRef.current?.publish({
+          destination: "/app/chat.markAsRead",
+          body: JSON.stringify(messageId),
+        });
+      })
+      .catch((error) => console.error("Error marking message as read:", error));
+  };
+
   const handleSendMessage = () => {
     if (
       newMessage.trim() &&
       receiverEmail &&
       isConnected &&
       stompClientRef.current?.connected &&
-      currentUserEmail // currentUserEmail をチェック
+      currentUserEmail
     ) {
       const message = {
         senderEmail: currentUserEmail,
         receiverEmail: receiverEmail,
         content: newMessage,
         sentAt: new Date().toISOString(),
+        status: "unread",
       };
 
       stompClientRef.current.publish({
@@ -143,30 +161,33 @@ function DirectMessage() {
 
   return (
     <div className="chat-container">
-      <h2>
-        Direct Messages with{" "}
-        {receiverUsername ? receiverUsername : receiverEmail}
-      </h2>
+      <h2>Direct Messages with {receiverEmail}</h2>
       <div className="message-list">
-        {messages.map((message, index) => (
-          <div
-            key={index}
-            className={`message-item ${
-              message.senderEmail === currentUserEmail ? "sent" : "received"
-            }`}
-          >
-            <p>
-              <strong>
-                {message.senderEmail === currentUserEmail
-                  ? "You"
-                  : receiverUsername || message.senderEmail}
-                :
-              </strong>{" "}
-              {message.content}
-            </p>
-            <small>{message.sentAt}</small>
-          </div>
-        ))}
+        {messages.map(
+          (message, index) =>
+            message && (
+              <div
+                key={index}
+                className={`message-item ${
+                  message.senderEmail === currentUserEmail ? "sent" : "received"
+                }`}
+              >
+                <p>
+                  <strong>
+                    {message.senderEmail === currentUserEmail
+                      ? "You"
+                      : message.senderEmail}
+                    :
+                  </strong>{" "}
+                  {message.content}
+                </p>
+                {message.status === "read" && (
+                  <small className="read-status">既読</small>
+                )}
+                <small>{message.sentAt}</small>
+              </div>
+            )
+        )}
       </div>
       <div className="message-input">
         <input
