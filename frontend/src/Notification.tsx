@@ -1,6 +1,31 @@
+import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import "./Notification.css";
+
+interface Notification {
+    subject: string;
+    value: string;
+}
+
 function Notification(){
+    const [notifications, setNotifications] = useState<Notification[]>([]);
+
+    useEffect(() => {
+        const fetchNotifications = async () => {
+            try{
+                const response = await fetch("/api/notifications");
+                if (!response.ok){
+                    throw new Error("Failed to fetch notifications");
+                }
+                const data: Notification[] = await response.json();
+                setNotifications(data);
+            }catch (error){
+                console.error("Error fetching notifications:", error);
+            }
+        };
+        fetchNotifications();
+    },[]);
+    
     return(
         <div>
             <Header />
@@ -13,10 +38,12 @@ function Notification(){
                     </ul>
                 </aside>
                 <section className="notices">
-                    <div className="notice-item">お知らせ</div>
-                    <div className="notice-item">お知らせ</div>
-                    <div className="notice-item">お知らせ</div>
-                    <div className="notice-item">お知らせ</div>
+                    {notifications.map((notice, index) => (
+                        <div className="notice-item" key={index}>
+                            <h3>{notice.subject}</h3>
+                            <p>{notice.value}</p>
+                        </div>
+                    ))}
                 </section>
             </div>
         </div>

@@ -11,7 +11,7 @@ import com.example.samplelogin.service.NotificationService;
 
 
 @RestController
-@RequestMapping("/notifications")
+@RequestMapping("/api/notifications")
 public class NotificationController {
     private final NotificationService notificationService;
 
@@ -21,7 +21,7 @@ public class NotificationController {
     }
 
     //お知らせを保存する
-    @PostMapping("/add")
+    @PostMapping
     public Notification createNotification(@RequestBody Notification notification) {
         return notificationService.createNotification(notification);
     }

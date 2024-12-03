@@ -17,5 +17,5 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     List<Notification> getReceivedNotifications();
     //ユーザの作成したお知らせを取得する
     @Query("SELECT p FROM Notification p WHERE p.userId = :userId")
-    List<Notification> getUserIdNotifications(Long userID);
+    List<Notification> getUserIdNotifications(Long userId);
 }
