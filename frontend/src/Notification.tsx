@@ -8,7 +8,7 @@ function Notification(){
                 <aside className="sidebar">
                     <ul>
                         <li className="sidebar-item"><a id="link" href="/notification/add">お知らせを追加</a></li>
-                        <li className="sidebar-item"><a id="link" href="/notification/recieved">受信したお知らせ</a></li>
+                        <li className="sidebar-item"><a id="link" href="/notification">受信したお知らせ</a></li>
                         <li className="sidebar-item"><a id="link" href="/notification/send">送ったお知らせ</a></li>
                     </ul>
                 </aside>
