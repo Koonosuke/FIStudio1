@@ -1,4 +1,5 @@
 package com.example.samplelogin.controller;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,9 @@ import jakarta.servlet.http.HttpSession;
 public class AuthController {
     @Autowired//必要なクラスのインスタンスを自動
     private UserService userService;
+
     HttpSession session;
+
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password, HttpServletRequest request) {
         User user = userService.findByEmail(email);// emailでユーザーを検索 
@@ -27,6 +30,7 @@ public class AuthController {
             if (user.isAdmin()) {
                 return new ResponseEntity<>("Admin login successful", HttpStatus.OK);
             }
+            
             session = request.getSession();
             if(session != null){
             session.setAttribute("user", user);//ユーザ情報をセッションに保存
@@ -36,20 +40,40 @@ public class AuthController {
         }
         return new ResponseEntity<>("Invalid email or password", HttpStatus.UNAUTHORIZED);
     }
+
     @PostMapping("/register")
     public String register(@RequestParam String email, @RequestParam String username, @RequestParam String password) {
         if (userService.findByEmail(email) != null) {  // 入力されたemailが既に登録済みか確認
             return "Email is already registered";
         }
+
         // 新しいユーザーの情報を作成
+
         User newUser = new User();
         newUser.setEmail(email);
         newUser.setUsername(username);
         newUser.setPassword(password);
         // 新しいユーザーを保存
+        session.setAttribute("user", newUser);
         userService.saveUser(newUser);
         return "Registration successful";
     }
+
+    @PostMapping("/edit")
+    public ResponseEntity<String> ChangeProfile(@RequestParam String username){
+        User newUser = (User) session.getAttribute("user");
+        /*if(username.equals(newUser.getUsername())){
+            return new ResponseEntity<>("Change failed!", HttpStatus.UNAUTHORIZED);
+        }
+        else{*/
+        newUser.setUsername(username);
+        session.removeAttribute("user");
+        session.setAttribute("user", newUser);
+        userService.UpdataUser(newUser);
+        return new ResponseEntity<>("", HttpStatus.OK);
+        //}
+    }
+
         @GetMapping("/user")
     public ResponseEntity<?>getUserName() {
         if (session != null) {
@@ -58,17 +82,22 @@ public class AuthController {
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("Not found"));
     }
+
     public static class ErrorResponse {
         private String message;
     
         public ErrorResponse(String message) {
             this.message = message;
         }
+    
         public String getMessage() {
             return message;
         }
+    
         public void setMessage(String message) {
             this.message = message;
         }
     }
+
+    
 }
