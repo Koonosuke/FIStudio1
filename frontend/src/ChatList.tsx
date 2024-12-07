@@ -49,19 +49,21 @@ function ChatList() {
 
   // ユーザー一覧を取得
   useEffect(() => {
-    fetch("http://localhost:8080/api/users", {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => setUsers(data))
-      .catch((error) =>
-        console.error("There was a problem with the fetch operation:", error)
-      );
-  }, []);
+    if (currentUser) {
+      fetch("http://localhost:8080/api/users", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => setUsers(data))
+        .catch((error) =>
+          console.error("There was a problem with the fetch operation:", error)
+        );
+    }
+  }, [currentUser]);
 
   // 各ユーザーの最新メッセージを取得
   useEffect(() => {
@@ -86,7 +88,7 @@ function ChatList() {
               }
             })
             .then((data: LatestMessage) => {
-              if (data) {
+              if (data && data.content) {
                 setLatestMessages((prev) => ({
                   ...prev,
                   [user.email]: data,
@@ -170,6 +172,7 @@ function ChatList() {
         <div className="user-cards grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {users
             .filter((user) => user.email !== currentUser?.email) // ログイン中のユーザーを除外
+            .filter((user) => latestMessages[user.email]) // 最新メッセージが存在するユーザーのみ表示
             .map((user) => (
               <div
                 className="user-card shadow-lg p-6 rounded-lg hover:bg-primary hover:text-white transition duration-300 ease-in-out"

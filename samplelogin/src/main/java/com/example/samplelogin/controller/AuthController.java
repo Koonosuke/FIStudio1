@@ -20,6 +20,7 @@ public class AuthController {
     @Autowired//必要なクラスのインスタンスを自動
     private UserService userService;
     HttpSession session;
+    
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password, HttpServletRequest request) {
         User user = userService.findByEmail(email);// emailでユーザーを検索 
@@ -29,13 +30,14 @@ public class AuthController {
             }
             session = request.getSession();
             if(session != null){
-            session.setAttribute("user", user);//ユーザ情報をセッションに保存
-            return new ResponseEntity<>("Login successful", HttpStatus.OK);
+                session.setAttribute("user", user);//ユーザ情報をセッションに保存
+                return new ResponseEntity<>("Login successful", HttpStatus.OK);
             }
-        return new ResponseEntity<>("Login failed", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Login failed", HttpStatus.UNAUTHORIZED);
         }
         return new ResponseEntity<>("Invalid email or password", HttpStatus.UNAUTHORIZED);
     }
+    
     @PostMapping("/register")
     public String register(@RequestParam String email, @RequestParam String username, @RequestParam String password) {
         if (userService.findByEmail(email) != null) {  // 入力されたemailが既に登録済みか確認
@@ -50,14 +52,26 @@ public class AuthController {
         userService.saveUser(newUser);
         return "Registration successful";
     }
-        @GetMapping("/user")
-    public ResponseEntity<?>getUserName() {
+    
+    @GetMapping("/user")
+    public ResponseEntity<?> getUserName() {
         if (session != null) {
             User user = (User) session.getAttribute("user");
             return new ResponseEntity<>(user, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("Not found"));
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate(); // セッションを無効化
+            return new ResponseEntity<>("Logout successful", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("No active session found", HttpStatus.BAD_REQUEST);
+    }
+    
     public static class ErrorResponse {
         private String message;
     

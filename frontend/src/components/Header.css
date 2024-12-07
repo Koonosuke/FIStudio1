@@ -14,10 +14,17 @@
   font-weight: bold;
 }
 
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
 .nav ul {
   list-style: none;
   display: flex;
   gap: 50px;
+  margin: 0;
 }
 
 .nav ul li {
@@ -35,15 +42,30 @@
   color: #66a5ad; /* ホバー時の色 */
 }
 
-hr{
+.logout-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 1.5rem;
+  transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+  background-color: #c0392b; /* ログアウトボタンのホバー時の色 */
+}
+
+hr {
   border: none;
 }
 
-.hr1{
+.hr1 {
   border-top: 1px solid #ffffff;
 }
 
-body{
+body {
   background-color: #003b46;
   background-size: cover;
 }
