@@ -1,69 +1,3 @@
-<<<<<<< HEAD
-package com.example.samplelogin.config;
-
-import java.util.List;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
-
-@Configuration
-@EnableWebSecurity
-@EnableWebSocketMessageBroker
-public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/login","/api/logout", "/api/register", "/api/users", "/api/user/**", "/api/messages/**", "/api/subjects/**", "/api/subjects/{subjectId}/contents/**", "/admin", "/ws/**", "/api/messages/latest").permitAll()
-                .anyRequest().authenticated()
-            )
-            .formLogin(form -> form.disable())
-            .sessionManagement(session -> session.maximumSessions(2)); // セッション管理を追加
-        return http.build();
-    }
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true); // セッション情報を送信可能にする
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
-
-    @Override
-    public void configureMessageBroker(@SuppressWarnings("null") MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic", "/topic/read-status"); // Adding /topic/read-status for read status updates
-        config.setApplicationDestinationPrefixes("/app");
-    }
-
-    @Override
-    public void registerStompEndpoints(@SuppressWarnings("null") StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns("*") // WebSocketのCORSを許可
-                .withSockJS();
-    }
-}
-=======
 package com.example.samplelogin.config;
 
 import java.util.List;
@@ -97,11 +31,10 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
         http.csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/login", "/api/register", "/api/users","/api/user","/api/edit" ,"/api/messages/**", "/api/subjects/**","/api/subjects/{subjectId}/contents/**", "/admin", "/ws/**").permitAll() 
+                .requestMatchers("/api/login", "/api/register","api/edit", "/api/users","/api/user" ,"/api/messages/**", "/api/subjects/**","/api/subjects/{subjectId}/contents/**", "/admin", "/ws/**").permitAll() 
                 .anyRequest().authenticated()
             )
-            .formLogin(form -> form.disable())
-            .sessionManagement(session -> session.maximumSessions(1)); // セッション管理を追加
+            .formLogin(form -> form.disable());
         return http.build();
     }
     
@@ -111,7 +44,7 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
         configuration.setAllowedOrigins(List.of("http://localhost:3000"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);// セッション情報を送信可能にする
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -120,15 +53,12 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic", "/topic/read-status"); // Adding /topic/read-status for read status updates
+        config.enableSimpleBroker("/topic");
         config.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws")
-        .setAllowedOriginPatterns("*")
-        .withSockJS();
+        registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS();
     }
 }
->>>>>>> c8dcb5b3f4b0ee293157df74d5c72d592ae64947
