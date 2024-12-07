@@ -48,7 +48,7 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
+//
     @Override
     public void configureMessageBroker(@SuppressWarnings("null") MessageBrokerRegistry config) {
         config.enableSimpleBroker("/topic", "/topic/read-status"); // Adding /topic/read-status for read status updates
