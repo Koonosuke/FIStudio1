@@ -20,12 +20,13 @@ import jakarta.servlet.http.HttpSession;
 public class AuthController {
     HttpSession session;
     
+    
 
     @Autowired//必要なクラスのインスタンスを自動
     private UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password, HttpServletRequest request) {   
+    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password, HttpServletRequest request) {
         User user = userService.findByEmail(email);// emailでユーザーを検索
         session = request.getSession(true);//セッションの初期化 11/26
         if (user != null && userService.checkPassword(user, password)) {// ユーザーが存在し、パスワードが一致するかを確認
@@ -37,23 +38,42 @@ public class AuthController {
         }
         return new ResponseEntity<>("Invalid email or password", HttpStatus.UNAUTHORIZED);
     }
+    
 
     @PostMapping("/register")
     public String register(@RequestParam String email, @RequestParam String username, @RequestParam String password, HttpServletRequest request) {
         if (userService.findByEmail(email) != null) {  // 入力されたemailが既に登録済みか確認
             return "Email is already registered";
         }
+            // 新しいユーザーの情報を作成
+            User newUser = new User();
+            newUser.setEmail(email);
+            newUser.setUsername(username);
+            newUser.setPassword(password);
+            newUser.setGrade(0);
+            newUser.setPr("");
+            // 新しいユーザーを保存
+            userService.saveUser(newUser);
+            session = request.getSession();//セッションの初期化 11/26
+            session.setAttribute("user", newUser);//セッションにユーザ情報を格納 11/26
+            return "Registration successful";
+    }
 
-        // 新しいユーザーの情報を作成
-        User newUser = new User();
-        newUser.setEmail(email);
-        newUser.setUsername(username);
-        newUser.setPassword(password);
-        // 新しいユーザーを保存
-        userService.saveUser(newUser);
-        session = request.getSession(true);//セッションの初期化 11/26
-        session.setAttribute("user", newUser);//セッションにユーザ情報を格納 11/26
-        return "Registration successful";
+    @GetMapping("/user")//ユーザ情報を
+    public ResponseEntity<?> getUserInfo(){
+        User user = (User) session.getAttribute("user");
+        if(user != null){
+            return ResponseEntity.ok(user);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+    }
+
+    @PostMapping("/logout")//ログアウト
+    public ResponseEntity<String> logout(){
+        session.invalidate();
+        return ResponseEntity.ok("Logout Complete!");
     }
 
     @PostMapping("/edit")
@@ -80,14 +100,5 @@ public class AuthController {
         
     }
 
-    @GetMapping("/user")//ユーザ情報を
-    public ResponseEntity<?> getUserInfo(){
-        User user = (User) session.getAttribute("user");
-        if(user != null){
-            return ResponseEntity.ok(user);
-        }
-        else{
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        }
-    }
+
 }
