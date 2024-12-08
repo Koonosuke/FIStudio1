@@ -12,6 +12,7 @@
 .logo {
   font-size: 3rem;
   font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .nav {
@@ -34,12 +35,13 @@
 .nav ul li a {
   color: white;
   text-decoration: none;
-  font-size: 2rem;
-  transition: color 0.3s;
+  font-size: 1.8rem;
+  transition: color 0.3s ease, transform 0.2s ease;
 }
 
 .nav ul li a:hover {
   color: #66a5ad; /* ホバー時の色 */
+  transform: scale(1.1); /* 少し拡大 */
 }
 
 .logout-button {
@@ -50,22 +52,100 @@
   padding: 10px 20px;
   cursor: pointer;
   font-size: 1.5rem;
-  transition: background-color 0.3s;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .logout-button:hover {
   background-color: #c0392b; /* ログアウトボタンのホバー時の色 */
+  transform: translateY(-2px); /* ボタンを少し浮かせる */
 }
 
-hr {
+/* モーダルのスタイル */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  border-radius: 8px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal h2 {
+  margin-bottom: 20px;
+  font-size: 2rem;
+  color: #333;
+}
+
+.modal p {
+  margin-bottom: 20px;
+  font-size: 1.4rem;
+  color: #555;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+}
+
+.confirm-button,
+.cancel-button {
+  padding: 10px 20px;
+  font-size: 1.2rem;
   border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.hr1 {
-  border-top: 1px solid #ffffff;
+.confirm-button {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.confirm-button:hover {
+  background-color: #27ae60;
+  transform: translateY(-2px);
+}
+
+.cancel-button {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.cancel-button:hover {
+  background-color: #c0392b;
+  transform: translateY(-2px);
+}
+
+/* フェードインアニメーション */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 body {
   background-color: #003b46;
   background-size: cover;
+  margin: 0;
 }

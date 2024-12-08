@@ -11,8 +11,9 @@ function Login() {
     try {
       const response = await fetch("http://localhost:8080/api/login", {
         method: "POST",
+        credentials: "include", // セッション情報を含む
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded", //例：http://localhost:8080/api/login/email=実際に入力されたメール?password=暗号化されたパスワード
+          "Content-Type": "application/x-www-form-urlencoded",
         },
         body: new URLSearchParams({ email, password }),
       });
@@ -23,15 +24,22 @@ function Login() {
           navigate("/admin"); // 管理者専用画面
         } else if (text === "Login successful") {
           navigate("/home"); // 一般ユーザー用画面
+        } else {
+          alert("Unexpected response: " + text);
         }
+      } else if (response.status === 401) {
+        alert("Invalid email or password. Please try again.");
       } else {
-        alert("Invalid email or password");
+        alert(`Login failed with status: ${response.status}`);
       }
     } catch (error) {
       console.error("Login failed:", error);
-      alert("Network error occurred. Please try again.");
+      alert(
+        "Network error occurred. Please check your connection and try again."
+      );
     }
   };
+
   const handleSignup = () => {
     navigate("/register");
   };

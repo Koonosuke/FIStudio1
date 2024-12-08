@@ -20,43 +20,70 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSecurity
 @EnableWebSocketMessageBroker
 public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/login","/api/logout", "/api/register", "/api/users", "/api/user/**", "/api/messages/**", "/api/subjects/**", "/api/subjects/{subjectId}/contents/**", "/admin", "/ws/**", "/api/messages/latest").permitAll()
+                .requestMatchers(
+                    "/api/login",
+                    "/api/logout",
+                    "/api/register",
+                    "/api/users",
+                    "/api/user",
+                    "/api/user/**",
+                    "/api/messages/**",
+                    "/api/subjects/**",
+                    "/api/subjects/{subjectId}/contents/**",
+                    "/admin",
+                    "/ws/**",
+                    "/api/messages/latest"
+                ).permitAll()
                 .anyRequest().authenticated()
             )
-            .formLogin(form -> form.disable())
-            .sessionManagement(session -> session.maximumSessions(2)); // セッション管理を追加
+            .logout(logout -> logout
+                .logoutUrl("/api/logout")
+                .logoutSuccessHandler((request, response, authentication) -> {
+                    response.setStatus(200);
+                    response.getWriter().write("Logout successful");
+                })
+                .invalidateHttpSession(true) // セッションを無効化
+                .deleteCookies("JSESSIONID") // クッキーを削除
+            )
+            .sessionManagement(session -> session
+                .maximumSessions(1) // 最大セッション数を制限
+                .maxSessionsPreventsLogin(false) // 新しいセッションが既存のセッションを無効化
+            );
         return http.build();
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:3000"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true); // セッション情報を送信可能にする
+        configuration.setAllowCredentials(true); // Cookieを含むリクエストを許可
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-//
+
     @Override
-    public void configureMessageBroker(@SuppressWarnings("null") MessageBrokerRegistry config) {
+    public void configureMessageBroker(MessageBrokerRegistry config) {
         config.enableSimpleBroker("/topic", "/topic/read-status"); // Adding /topic/read-status for read status updates
         config.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
-    public void registerStompEndpoints(@SuppressWarnings("null") StompEndpointRegistry registry) {
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
                 .setAllowedOriginPatterns("*") // WebSocketのCORSを許可
                 .withSockJS();
