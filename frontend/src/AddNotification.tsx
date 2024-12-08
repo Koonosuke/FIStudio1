@@ -11,14 +11,15 @@ function AddNotification() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const notification = { subject, value};
-
+        console.log("おまんちん");
         try{
-            const response = await fetch("/api/notifications",{
+            const response = await fetch("http://localhost:8080/api/notifications",{
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
                 },
                 body: JSON.stringify(notification),
+                credentials: "include"
             });
 
             if (response.ok){
@@ -61,7 +62,7 @@ function AddNotification() {
                             required
                         />
                         </div>
-                        <button type="submit">送信</button>
+                        <button onClick={handleSubmit}>送信</button>
                     </form>
                 </div>
             </div>

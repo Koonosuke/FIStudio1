@@ -12,15 +12,22 @@ import com.example.samplelogin.repository.NotificationRepository;
 
 @Service
 public class NotificationService {
-    private final NotificationRepository notificationRepository;
-
     @Autowired
+    private final NotificationRepository notificationRepository;
+    
     public NotificationService(NotificationRepository notificationRepository){
         this.notificationRepository = notificationRepository;
     }
     //ログイン中のユーザー情報を取得する
     public User getCurrentUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null){
+            System.out.println("Authentication is null");
+        }else {
+            System.out.println("Authentication: " + authentication);
+            System.out.println("Authentication: " + authentication.isAuthenticated());
+            System.out.println("Authentication: " + authentication.getPrincipal());
+        }
         if (authentication != null && authentication.isAuthenticated()){
             Object principal = authentication.getPrincipal();
             if (principal instanceof CustomUserDetails){
