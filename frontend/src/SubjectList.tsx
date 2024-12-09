@@ -9,7 +9,8 @@ interface Content {
   evaluation: number;
   pastExams: string;
   createdAt: string;
-  userId: string;
+  userId: string; // ユーザーID
+  userName: string; // ユーザー名を追加
 }
 
 interface Subject {

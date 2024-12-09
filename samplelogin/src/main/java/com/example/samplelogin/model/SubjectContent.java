@@ -20,7 +20,7 @@ public class SubjectContent {
     @Column(name = "subject_id", nullable = false)
     private Long subjectId;
 
-    @Column(name = "user_id")  // nullableを削除してオプショナルにする
+    @Column(name = "user_id", nullable = false)
     private Long userId;
 
     @Column(columnDefinition = "TEXT")
@@ -34,21 +34,19 @@ public class SubjectContent {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
-
-    // Constructors
-    public SubjectContent() {
+    @Column(name = "user_name", nullable = false)
+    private String userName;
+    
+    public String getUserName() {
+        return userName;
     }
-
-    public SubjectContent(Long subjectId, Long userId, String content, Integer evaluation, String pastExams) {
-        this.subjectId = subjectId;
-        this.userId = userId;
-        this.content = content;
-        this.evaluation = evaluation;
-        this.pastExams = pastExams;
-        this.createdAt = LocalDateTime.now();
+    
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
-
+    
     // Getters and Setters
+
     public Long getId() {
         return id;
     }
