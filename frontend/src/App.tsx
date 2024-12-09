@@ -18,8 +18,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/chat" element={<ChatList />} />
         <Route path="/admin" element={<Admins />} />
-        <Route path="/profile" element={<Profile/>}/>
-        <Route path="/profile/edit" element={<ProfileEdit/>}/>
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/edit" element={<ProfileEdit />} />
         <Route path="/subjects" element={<SubjectList />} />
         <Route
           path="/direct-message/:receiverEmail"

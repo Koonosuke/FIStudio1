@@ -32,8 +32,8 @@ public class SubjectContentController {
         content.setSubjectId(subjectId);
         
         // userIdを任意のフィールドにする（必要であればデフォルト値を設定）
-        if (content.getUserId() == null) {
-            content.setUserId(-1L); // デフォルトのユーザーIDを設定（例えば、匿名ユーザーとして扱う）
+        if (content.getId() == null) {
+            content.setId(-1L); // デフォルトのユーザーIDを設定（例えば、匿名ユーザーとして扱う）
         }
 
         return subjectContentService.saveContent(content);
