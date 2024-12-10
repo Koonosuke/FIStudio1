@@ -1,7 +1,7 @@
 import { Client } from "@stomp/stompjs";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, } from "react";
 import { FaPaperPlane } from "react-icons/fa";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import SockJS from "sockjs-client";
 import "./DirectMessage.css";
 
@@ -21,6 +21,7 @@ function DirectMessage() {
   const [isConnected, setIsConnected] = useState(false);
   const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(null);
   const stompClientRef = useRef<Client | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // ログイン中のユーザーを取得
@@ -159,9 +160,19 @@ function DirectMessage() {
     }
   };
 
+  const goBack = () => {
+    navigate(-1);
+  };
+
   return (
     <div className="chat-container">
-      <h2>Direct Messages with {receiverEmail}</h2>
+      <div className="navBar">
+        <div className="backButton">
+          <h2  onClick={goBack}><u>Back</u></h2>
+        </div>
+        <h2>Direct Messages with {receiverEmail}</h2>
+      </div>
+      
       <div className="message-list">
         {messages.map(
           (message, index) =>
