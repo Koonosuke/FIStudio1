@@ -2,18 +2,24 @@ import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import "./Notification.css";
 
-interface Notification {
+interface Notification{
     subject: string;
     value: string;
 }
 
-function Notification(){
+interface User{
+    id: Number;
+}
+function SentNotification(){
     const [notifications, setNotifications] = useState<Notification[]>([]);
+    const [userId, setUserId] = useState<User | null>(null);
 
     useEffect(() => {
-        const fetchNotifications = async () => {
+        const fetchNotifications = async() =>{
+            if (!userId) return;
             try{
-                const response = await fetch("http://localhost:8080/api/notifications",{
+                const id = String(userId);
+                const response = await fetch(`http://localhost:8080/api/notifications/self?userId=${id}`,{
                     method: "GET",
                     headers:{
                         "Content-Type": "application/json",
@@ -25,13 +31,30 @@ function Notification(){
                 }
                 const data: Notification[] = await response.json();
                 setNotifications(data);
-            }catch (error){
-                console.error("Error fetching notifications:", error);
+            }catch(error){
+                console.error("Error fetching notifications: ", error);
             }
         };
         fetchNotifications();
+    },[userId]);
+    useEffect(() =>{
+        const response = fetch("http://localhost:8080/api/user",{
+            method: "GET",
+            credentials: "include",
+        })
+        .then((response)=>{
+            if(!response.ok){
+                throw new Error("User data fetch failed");
+            }
+            return response.json();
+        })
+        .then((data) =>{
+            setUserId(data.id);
+        })
+        .catch((error)=>{
+            console.error("Error fetching user info: ", error);
+        })
     },[]);
-    
     return(
         <div>
             <Header />
@@ -60,4 +83,4 @@ function Notification(){
     );
 }
 
-export default Notification;
+export default SentNotification;

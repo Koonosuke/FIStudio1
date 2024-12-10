@@ -27,9 +27,10 @@ public class AuthController {
             if (user.isAdmin()) {
                 return new ResponseEntity<>("Admin login successful", HttpStatus.OK);
             }
-            session = request.getSession();
+            session = request.getSession(true);
             if(session != null){
             session.setAttribute("user", user);//ユーザ情報をセッションに保存
+            System.out.println("user saved session " + session.getAttribute("user"));
             return new ResponseEntity<>("Login successful", HttpStatus.OK);
             }
         return new ResponseEntity<>("Login failed", HttpStatus.UNAUTHORIZED);

@@ -12,9 +12,6 @@ import com.example.samplelogin.model.Notification;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long>{
-    //全お知らせを取得する
-    @Query("SELECT n FROM Notification n")
-    List<Notification> getReceivedNotifications();
     //ユーザの作成したお知らせを取得する
     @Query("SELECT p FROM Notification p WHERE p.userId = :userId")
     List<Notification> getUserIdNotifications(Long userId);

@@ -1,17 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "./components/Header";
 import "./Notification.css";
 
+interface User {
+    id: Int16Array;
+}
+
 function AddNotification() {
     const [subject, setSubject] = useState("");
     const [value, setValue] = useState("");
+    const [userId, setUserId] = useState<User | null>(null);
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const notification = { subject, value};
-        console.log("おまんちん");
+        if(userId === null){
+            console.error("User ID is not available");
+            return;
+        }
+        const notification = {userId, subject, value};
         try{
             const response = await fetch("http://localhost:8080/api/notifications",{
                 method: "POST",
@@ -31,6 +39,24 @@ function AddNotification() {
             console.error("Error:", error);
         }
     };
+    useEffect(() =>{
+        const response = fetch("http://localhost:8080/api/user",{
+            method: "GET",
+            credentials: "include",
+        })
+        .then((response)=>{
+            if(!response.ok){
+                throw new Error("User data fetch failed");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            setUserId(data.id);
+        })
+        .catch((error)=>{
+            console.error("Error fetching user info:", error);
+        })
+    },[]);
     return(
         <div>
             <Header />
@@ -62,7 +88,7 @@ function AddNotification() {
                             required
                         />
                         </div>
-                        <button onClick={handleSubmit}>送信</button>
+                        <button type="submit">送信</button>
                     </form>
                 </div>
             </div>

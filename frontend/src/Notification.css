@@ -1,43 +1,55 @@
 .notification{
     background-color: #003b46;
     display:flex;
+    color: white;
+    height:100vh;
+    overflow: hidden;
 }
 .sidebar{
     background-color: #003b46;
     text-align:center;
-    width:calc(100% /3);
-    margin-top: 10px;
-    padding:5px;
+    width:30%;
+    padding: 10px;
+    border-right: 2px solid #66a5ad;
 }
 .sidebar ul{
     list-style:none;
+    padding: 0;
+    margin: 0;
 }
 .sidebar-item{
-    margin:10px;
-    padding:5px;
-    height:50px;
-    font-size:2rem;
+    margin:15px 0;
+    padding:10px;
+    font-size:1.5rem;
     white-space:nowrap;
     color:white;
+    cursor: pointer;
+}
+.sidebar-item:hover{
+    background-color: #66a5ad;
+    border-radius: 5px;
 }
 .notices{
     background-color: #003b46;
-    text-align: center;
-    width:calc(200%/3);
-    margin-top: 10px;
-    padding:5px;
-    font: size 20px;
+    text-align: left;
+    width:70%;
+    padding:20px;
+    overflow-y: auto;
+    height: calc(100vh - 20px);
+    box-sizing: border-box;
 }
 .notice-item{
-    margin: 10px;
-    padding:5px;
-    height:30px;
-    font-size:1.8rem;
-    color:white;
+    border-bottom: 1px solid #66a5ad;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+}
+.notice-item p{
+    margin:5px 0;
 }
 #link{
     text-decoration-line: none;
     color:white;
+    transition: color 0.3s ease;
 }
 #link:hover{
     color: #66a5ad;

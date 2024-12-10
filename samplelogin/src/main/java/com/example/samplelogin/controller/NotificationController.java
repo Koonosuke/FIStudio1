@@ -1,15 +1,19 @@
 package com.example.samplelogin.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.samplelogin.model.Notification;
 import com.example.samplelogin.service.NotificationService;
+
 
 
 @RestController
@@ -25,13 +29,22 @@ public class NotificationController {
     //お知らせを保存する
     @PostMapping("/notifications")
     public Notification createNotification(@RequestBody Notification notification) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("Received notification: " + notification);
-        System.out.println("Authentication: " + authentication);
-        if(authentication != null){
-            System.out.println("Principal: "+authentication.getPrincipal());
-        }
         return notificationService.createNotification(notification);
     }
+
+    //お知らせを全取得する
+    @GetMapping("/notifications")
+    public ResponseEntity<List<Notification>> getAllNotifications() {
+        List<Notification> notifications = notificationService.getAllNotifications();
+        return ResponseEntity.ok(notifications);
+    }
+    //特定のユーザIDのデータのみを取得する
+    @GetMapping("/notifications/self")
+    public ResponseEntity<List<Notification>> getSelfNotifications(@RequestParam("userId") String userId){
+        System.out.println("Conduct query: "+userId);
+        List<Notification> notifications = notificationService.getSelfNotifications(userId);
+        return ResponseEntity.ok(notifications);
+    }
+    
     
 }

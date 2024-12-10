@@ -1,13 +1,12 @@
 package com.example.samplelogin.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.example.samplelogin.CustomUserDetails;
 import com.example.samplelogin.model.Notification;
-import com.example.samplelogin.model.User;
 import com.example.samplelogin.repository.NotificationRepository;
 
 @Service
@@ -19,30 +18,38 @@ public class NotificationService {
         this.notificationRepository = notificationRepository;
     }
     //ログイン中のユーザー情報を取得する
-    public User getCurrentUser(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication == null){
-            System.out.println("Authentication is null");
-        }else {
-            System.out.println("Authentication: " + authentication);
-            System.out.println("Authentication: " + authentication.isAuthenticated());
-            System.out.println("Authentication: " + authentication.getPrincipal());
+    /*
+    public User getCurrentUser(HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        System.out.println(session);
+        if (session == null){
+            throw new IllegalStateException("ログインユーザーが見つかりません．セッションが存在しないのでは？");
         }
-        if (authentication != null && authentication.isAuthenticated()){
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof CustomUserDetails){
-                return ((CustomUserDetails) principal).getUser();
-            }
+        User user = (User) session.getAttribute("user");
+        if (user == null){
+            throw new IllegalStateException("セッションにユーザー情報がありません．");
         }
-        return null;
+        return user;
 
-    }
+    } */
+   //お知らせを保存する
     public Notification createNotification(Notification notification){
-        User currentUser = getCurrentUser();
-        if (currentUser == null){
-            throw new IllegalStateException("ログインユーザーが見つかりません．");
-        }
-        notification.setUserId(currentUser.getId());
         return notificationRepository.save(notification);
+    }
+    //お知らせを全取得する
+    public List<Notification> getAllNotifications(){
+        return notificationRepository.findAll();
+    }
+    //自身が作成したお知らせだけを取得する．
+    public List<Notification> getSelfNotifications(String userId){
+        Long sendingUserId = null;
+        try{
+            sendingUserId = Long.parseLong(userId);
+        }catch(NumberFormatException e){
+            System.err.println(e.getMessage());
+            return new ArrayList<>();
+        }
+        System.out.println("Fetching notifications for userId: "+ sendingUserId);
+        return notificationRepository.getUserIdNotifications(sendingUserId);
     }
 }
