@@ -24,6 +24,12 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)//学年  新規追加したぞ
+    private int grade;
+
+    @Column(nullable = false)//頑張ったこと  新規追加したぞ
+    private String pr;
+
     @Column(name = "isadmin", nullable = false)
     private boolean isAdmin;
 
@@ -53,6 +59,22 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getGrade(){
+        return grade;
+    }
+
+    public void setGrade(int grade){
+        this.grade = grade;
+    }
+
+    public String getPr(){
+        return pr;
+    }
+
+    public void setPr(String pr){
+        this.pr = pr;
     }
 
     public boolean isAdmin() {
