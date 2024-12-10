@@ -4,7 +4,31 @@
   flex-direction: column;
   height: 100vh;
   background-color: #f0f0f0;
+  padding-right: 10px;
 }
+
+.navBar{
+  display: flex;
+  flex-direction:row ;
+  padding-top: 10px;
+}
+
+.backButton{
+  color:#ff933b
+}
+
+.backButton:hover{
+  color:#fcff3a
+}
+
+
+
+.navBar h2{
+  vertical-align: middle;
+  padding-left: 20px;
+}
+
+
 
 .message-list {
   flex: 1;
@@ -129,3 +153,4 @@
     align-items: center;
   }
 }
+

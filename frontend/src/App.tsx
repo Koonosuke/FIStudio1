@@ -7,6 +7,7 @@ import Home from "./Home";
 import Login from "./Login";
 import Notification from "./Notification";
 import Profile from "./Profile";
+import ProfileEdit from "./ProfileEdit";
 import Register from "./Register";
 import SentNotification from "./SentNotification";
 import SubjectList from "./SubjectList";
@@ -22,7 +23,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/chat" element={<ChatList />} />
         <Route path="/admin" element={<Admins />} />
-        <Route path ="/profile" element={<Profile/>}/>
+        <Route path="/profile" element={<Profile/>}/>
+        <Route path="/profile/edit" element={<ProfileEdit/>}/>
         <Route path="/subjects" element={<SubjectList />} />
         <Route
           path="/direct-message/:receiverEmail"
