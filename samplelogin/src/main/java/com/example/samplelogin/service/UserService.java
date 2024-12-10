@@ -32,5 +32,9 @@ public class UserService {
     public User UpdataUser(User user) {
         return userRepository.save(user);
     }
+
+    public void DeleteUser(User user) {
+        userRepository.delete(user);
+    }
 }
 //サービスはビジネスロジックを管理する層です。リポジトリを利用してデータを操作し、複雑な処理や条件分岐などのビジネスロジックを実装
