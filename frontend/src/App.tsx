@@ -1,6 +1,9 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import AddNotification from "./AddNotification";
+import AdminAddNotification from "./admin/AdminAddNotification";
+import AdminNotification from "./admin/AdminNotification";
 import Admins from "./admin/Admins";
+import AdminSentNotification from "./admin/AdminSentNotification";
 import ChatList from "./ChatList";
 import DirectMessage from "./DirectMessage"; // DirectMessageコンポーネントをインポート
 import Home from "./Home";
@@ -23,6 +26,9 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/chat" element={<ChatList />} />
         <Route path="/admin" element={<Admins />} />
+        <Route path="/notificationAdmin" element={<AdminNotification />}/>
+        <Route path="/notificationAdmin/add" element={<AdminAddNotification />}/>
+        <Route path="/notificationAdmin/send" element={<AdminSentNotification />}/>
         <Route path="/profile" element={<Profile/>}/>
         <Route path="/profile/edit" element={<ProfileEdit/>}/>
         <Route path="/subjects" element={<SubjectList />} />

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import Header from "./components/Header";
-import "./Notification.css";
+import HeaderAdmin from "../components/HeaderAdmin";
+import "../Notification.css";
 
 interface Notification{
     subject: string;
@@ -10,7 +10,7 @@ interface Notification{
 interface User{
     id: Number;
 }
-function SentNotification(){
+function AdminSentNotification(){
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [userId, setUserId] = useState<User | null>(null);
 
@@ -26,7 +26,7 @@ function SentNotification(){
                     },
                     credentials: "include",
                 });
-                if (!response.ok){
+                if(!response.ok){
                     throw new Error("Failed to fetch notifications");
                 }
                 const data: Notification[] = await response.json();
@@ -37,7 +37,8 @@ function SentNotification(){
         };
         fetchNotifications();
     },[userId]);
-    useEffect(() =>{
+
+    useEffect(() => {
         const response = fetch("http://localhost:8080/api/user",{
             method: "GET",
             credentials: "include",
@@ -48,22 +49,22 @@ function SentNotification(){
             }
             return response.json();
         })
-        .then((data) =>{
+        .then((data) => {
             setUserId(data.id);
         })
-        .catch((error)=>{
+        .catch((error) => {
             console.error("Error fetching user info: ", error);
         })
     },[]);
-    return(
-        <div>
-            <Header />
+    return (
+    <div>
+        <HeaderAdmin />
             <div className="notification">
                 <aside className="sidebar">
                     <ul>
-                        <li className="sidebar-item"><a id="link" href="/notification/add">お知らせを追加</a></li>
-                        <li className="sidebar-item"><a id="link" href="/notification">受信したお知らせ</a></li>
-                        <li className="sidebar-item"><a id="link" href="/notification/send">送ったお知らせ</a></li>
+                        <li className="sidebar-item"><a id="link" href="/notificationAdmin/add">お知らせを追加</a></li>
+                        <li className="sidebar-item"><a id="link" href="/notificationAdmin">受信したお知らせ</a></li>
+                        <li className="sidebar-item"><a id="link" href="/notificationAdmin/send">送ったお知らせ</a></li>
                     </ul>
                 </aside>
                 <section className="notices">
@@ -83,4 +84,4 @@ function SentNotification(){
     );
 }
 
-export default SentNotification;
+export default AdminSentNotification;
