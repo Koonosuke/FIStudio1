@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./AddNotification.css";
 import Header from "./components/Header";
-import "./Notification.css";
 
 interface User {
     id: Int16Array;

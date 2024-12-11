@@ -47,8 +47,8 @@ function Notification(){
                     {notifications.length > 0 ? (
                         notifications.map((notice, index) => (
                         <div className="notice-item" key={index}>
-                            <p>件名:{notice.subject}</p>
-                            <p>内容:{notice.value}</p>
+                            <p className="head">件名:{notice.subject}</p>
+                            <p className="body">内容:{notice.value}</p>
                         </div>
                     ))
                 )　:　(
