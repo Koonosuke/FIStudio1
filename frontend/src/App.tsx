@@ -9,6 +9,7 @@ import Notification from "./Notification";
 import Profile from "./Profile";
 import ProfileEdit from "./ProfileEdit";
 import Register from "./Register";
+import SentNotification from "./SentNotification";
 import SubjectList from "./SubjectList";
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/notification" element={<Notification />} />
         <Route path="/notification/add" element={<AddNotification />} />
+        <Route path="/notification/send" element={<SentNotification />} />
         <Route path="/register" element={<Register />} />
         <Route path="/chat" element={<ChatList />} />
         <Route path="/admin" element={<Admins />} />

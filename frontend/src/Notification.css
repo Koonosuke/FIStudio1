@@ -1,43 +1,91 @@
 .notification{
     background-color: #003b46;
     display:flex;
+    color: white;
+    height:100vh;
+    overflow: hidden;
 }
 .sidebar{
     background-color: #003b46;
     text-align:center;
-    width:calc(100% /3);
-    margin-top: 10px;
-    padding:5px;
+    width:30%;
+    padding: 10px;
+    border-right: 2px solid #66a5ad;
 }
 .sidebar ul{
     list-style:none;
+    padding: 0;
+    margin: 0;
 }
 .sidebar-item{
-    margin:10px;
-    padding:5px;
-    height:50px;
-    font-size:2rem;
+    margin:15px 0;
+    padding:10px;
+    font-size:1.5rem;
     white-space:nowrap;
     color:white;
+    cursor: pointer;
 }
-.notices{
+.sidebar-item:hover{
+    background-color: #66a5ad;
+    border-radius: 5px;
+}
+.notices {
     background-color: #003b46;
-    text-align: center;
-    width:calc(200%/3);
-    margin-top: 10px;
-    padding:5px;
-    font: size 20px;
+    text-align: left;
+    width: 70%;
+    padding: 20px;
+    overflow-y: auto;
+    height: calc(100vh - 20px);
+    box-sizing: border-box;
+    margin: 0 auto;
+    border-left: 1px solid #66a5ad;
 }
-.notice-item{
-    margin: 10px;
-    padding:5px;
-    height:30px;
-    font-size:1.8rem;
-    color:white;
+
+.notice-item {
+    border-top: 1px solid #66a5ad;
+    margin-top: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.notice-item:nth-last-child(1) {
+    border-bottom: 1px solid #66a5ad;
+}
+
+.notice-item .head {
+    font-weight: bold;
+    font-size: 18px;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.notice-item .body {
+    font-size: 16px;
+    color: #d1e8e2;
+}
+
+@media screen and (max-width: 480px) {
+    .notices {
+        width: 100%;
+        padding: 10px;
+    }
+    .notice-item {
+        padding: 10px;
+        margin-top: 10px;
+    }
+    .notice-item .head {
+        font-size: 16px;
+    }
+    .notice-item .body {
+        font-size: 14px;
+    }
 }
 #link{
     text-decoration-line: none;
     color:white;
+    transition: color 0.3s ease;
 }
 #link:hover{
     color: #66a5ad;
