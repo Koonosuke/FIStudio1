@@ -90,3 +90,29 @@
 #link:hover{
     color: #66a5ad;
 }
+.admin-notice {
+    background-color: #a60000; /* 管理者用の目立つ背景色 */
+    color: #ffffff; /* テキストを白に設定 */
+    border: 2px solid #ffcc00; /* 金色の枠線を追加 */
+    border-radius: 8px; /* 角を丸くする */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 少し浮いているような影をつける */
+}
+
+.admin-notice .head {
+    color: #ffcc00; /* 件名を金色にする */
+    font-size: 20px; /* 件名を少し大きくする */
+}
+
+.admin-notice .body {
+    color: #ffffff; /* 内容を白にする */
+}
+
+.admin-notice::before {
+    content: "⭐ 管理者のお知らせ";
+    display: block;
+    font-weight: bold;
+    font-size: 14px;
+    color: #ffcc00;
+    margin-bottom: 10px;
+}

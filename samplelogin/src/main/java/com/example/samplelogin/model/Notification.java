@@ -34,7 +34,7 @@ public class Notification {
         this.notificationId = notificationId;
     }
     public Long getUserId(){
-        return notificationId;
+        return userId;
     }
     public void setUserId(Long userId){
         this.userId = userId;
