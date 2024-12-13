@@ -31,7 +31,7 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
         http.csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("api/notifications/self","/api/notifications","/api/login", "/api/register", "/api/users", "/api/user/**", "/api/messages/**", "/api/subjects/**", "/api/subjects/{subjectId}/contents/**", "/admin", "/ws/**", "/api/messages/latest","/api/edit").permitAll()
+                .requestMatchers("/api/isAdmin","api/notifications/self","/api/notifications","/api/login", "/api/register", "/api/users", "/api/user/**", "/api/messages/**", "/api/subjects/**", "/api/subjects/{subjectId}/contents/**", "/admin", "/ws/**", "/api/messages/latest","/api/edit").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form.disable());

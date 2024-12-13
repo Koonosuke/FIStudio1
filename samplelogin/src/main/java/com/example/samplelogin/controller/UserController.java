@@ -49,6 +49,11 @@ public class UserController {
         }
         return userList;
     }
-
+    //指定されたuserIDが管理者であるかどうか
+    @GetMapping("/isAdmin")
+    public boolean isUserAdmin(@RequestParam("userId") String userId){
+        System.out.println("received user ID:"+userId);
+        return userService.isUserAdmin(userId);
+    }
 
 }
