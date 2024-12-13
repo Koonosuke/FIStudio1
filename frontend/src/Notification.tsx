@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import "./Notification.css";
 
 interface Notification {
+    notificationId: Number;
     userId: Number;
     subject: string;
     value: string;
