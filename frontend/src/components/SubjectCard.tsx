@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-
+import { FaStar } from "react-icons/fa";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 interface Content {
   userName: string;
   id: number;
@@ -29,13 +30,14 @@ const SubjectCard: React.FC<Subject> = ({
   const [newEvaluation, setNewEvaluation] = useState(0);
   const [newPastExams, setNewPastExams] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [expanded, setExpanded] = useState(false); // 展開状態を管理
 
-  // 投稿を取得する処理
+  // 投稿を取得する処理]
   useEffect(() => {
     const fetchContents = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/subjects/${id}/contents`,
+          `${API_BASE_URL}/api/subjects/${id}/contents`,
           {
             method: "GET",
             credentials: "include",
@@ -66,7 +68,7 @@ const SubjectCard: React.FC<Subject> = ({
       };
 
       const response = await fetch(
-        `http://localhost:8080/api/subjects/${id}/contents`,
+        `${API_BASE_URL}/api/subjects/${id}/contents`,
         {
           method: "POST",
           credentials: "include",
@@ -88,6 +90,21 @@ const SubjectCard: React.FC<Subject> = ({
       setErrorMessage("コメントの投稿に失敗しました。もう一度お試しください。");
       console.error("Error adding content:", error);
     }
+  };
+
+  const renderStars = (rating: number) => {
+    return (
+      <div style={{ display: "flex", alignItems: "center" }}>
+        {Array.from({ length: 5 }, (_, index) => (
+          <FaStar
+            key={index}
+            color={index < rating ? "#FFD700" : "#ddd"} // 黄色(#FFD700)と灰色(#ddd)
+            size={16}
+            style={{ marginRight: "2px" }}
+          />
+        ))}
+      </div>
+    );
   };
 
   return (
@@ -117,22 +134,32 @@ const SubjectCard: React.FC<Subject> = ({
           <button onClick={handleAddContent}>投稿</button>
         </div>
       )}
-      <div className="contents-list">
+      <div className={`contents-list ${expanded ? "expanded" : "collapsed"}`}>
         <h4>投稿内容:</h4>
         {currentContents.length > 0 ? (
-          currentContents.map((content) => (
-            <div key={content.id} className="content-item">
-              <p>投稿者: {content.userName}</p> {/* ユーザー名を表示 */}
-              <p>{content.content}</p>
-              <p>評価: {content.evaluation} / 5</p>
-              <p>過去問: {content.pastExams || "なし"}</p>
-              <p>投稿日: {new Date(content.createdAt).toLocaleString()}</p>
-            </div>
-          ))
+          currentContents
+            .slice(0, expanded ? currentContents.length : 1)
+            .map((content) => (
+              <div key={content.id} className="content-item">
+                <p>投稿者: {content.userName}</p>
+                <p>{content.content}</p>
+                <p>評価: {renderStars(content.evaluation)}</p>
+                <p>過去問: {content.pastExams || "なし"}</p>
+                <p>投稿日: {new Date(content.createdAt).toLocaleString()}</p>
+              </div>
+            ))
         ) : (
           <p>まだ投稿がありません。</p>
         )}
       </div>
+      {currentContents.length > 0 && (
+        <button
+          className="toggle-button"
+          onClick={() => setExpanded(!expanded)}
+        >
+          {expanded ? "閉じる" : "もっと見る"}
+        </button>
+      )}
     </div>
   );
 };

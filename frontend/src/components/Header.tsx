@@ -2,7 +2,7 @@ import { useState } from "react";
 import ReactDOM from "react-dom";
 import { useNavigate } from "react-router-dom";
 import "./Header.css";
-
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 type LogoutModalProps = {
   onConfirm: () => void;
   onCancel: () => void;
@@ -35,7 +35,7 @@ function Header() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/logout", {
+      const response = await fetch(`${API_BASE_URL}/api/logout`, {
         method: "POST",
         credentials: "include",
         headers: {

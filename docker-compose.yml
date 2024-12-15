@@ -1,0 +1,67 @@
+version: "3.8"
+services:
+  backend:
+    container_name: backendspring
+    build:
+      context: ./samplelogin
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/new_memos
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=kishi1021
+      - SPRING_REDIS_HOST=redis
+    depends_on:
+      - db
+      - redis
+    networks:
+      - app-network
+
+  frontend:
+    container_name: frontendreact
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  db:
+    container_name: postgresmakkori
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_DB=new_memos
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=kishi1021
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d
+    ports:
+      - "5438:5432"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  app-network:
+    driver: bridge

@@ -7,7 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-
 @Entity
 @Table(name = "users")
 public class User {
@@ -24,15 +23,19 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)//学年  新規追加したぞ
-    private int grade;
+    @Column(nullable = false)
+    private int grade = 1; // デフォルト値を設定
 
-    @Column(nullable = false)//頑張ったこと  新規追加したぞ
-    private String pr;
+    @Column(nullable = false)
+    private String pr = ""; // デフォルト値を設定
 
     @Column(name = "isadmin", nullable = false)
-    private boolean isAdmin;
+    private boolean isAdmin = false; // デフォルト値を設定
 
+    // デフォルトコンストラクター
+    public User() {}
+
+    // Getter and Setter
     public Long getId() {
         return id;
     }
@@ -61,19 +64,19 @@ public class User {
         this.password = password;
     }
 
-    public int getGrade(){
+    public int getGrade() {
         return grade;
     }
 
-    public void setGrade(int grade){
+    public void setGrade(int grade) {
         this.grade = grade;
     }
 
-    public String getPr(){
+    public String getPr() {
         return pr;
     }
 
-    public void setPr(String pr){
+    public void setPr(String pr) {
         this.pr = pr;
     }
 

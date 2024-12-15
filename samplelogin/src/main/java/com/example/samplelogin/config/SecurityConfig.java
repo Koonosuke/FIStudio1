@@ -34,6 +34,9 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
                 .requestMatchers(
                     "/api/login",
                     "/api/logout",
+                    "/api/isAdmin",
+                    "api/notifications/self",
+                    "/api/notifications",
                     "/api/edit",
                     "/api/register",
                     "/api/users",
@@ -45,8 +48,8 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
                     "/admin",
                     "/ws/**",
                     "/api/messages/latest"
-                ).permitAll()
-                .anyRequest().authenticated()
+                ).permitAll() // 許可されるエンドポイント
+                .anyRequest().authenticated() // 他のリクエストは認証を要求
             )
             .logout(logout -> logout
                 .logoutUrl("/api/logout")
@@ -67,10 +70,11 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true); // Cookieを含むリクエストを許可
+        configuration.addAllowedOrigin("http://localhost:3000");  // ローカルでのReact実行
+        configuration.addAllowedOrigin("http://frontendreact:3000"); // Docker内のReact実行（修正）
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 許可するHTTPメソッドをリスト化
+        configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

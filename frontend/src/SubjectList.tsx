@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./SubjectList.css";
 import Header from "./components/Header";
 import SubjectCard from "./components/SubjectCard";
-
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 interface Content {
   id: number;
   content: string;
@@ -38,7 +38,7 @@ const SubjectList: React.FC = () => {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/user", {
+        const response = await fetch(`${API_BASE_URL}/api/user`, {
           method: "GET",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
@@ -61,7 +61,7 @@ const SubjectList: React.FC = () => {
   useEffect(() => {
     const fetchSubjects = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/subjects", {
+        const response = await fetch(`${API_BASE_URL}/api/subjects`, {
           method: "GET",
           credentials: "include",
         });
@@ -113,7 +113,7 @@ const SubjectList: React.FC = () => {
         userId: currentUser.email || "unknownUser",
       };
 
-      const response = await fetch("http://localhost:8080/api/subjects", {
+      const response = await fetch(`${API_BASE_URL}/api/subjects`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

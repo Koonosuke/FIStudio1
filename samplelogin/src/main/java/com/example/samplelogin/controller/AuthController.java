@@ -33,21 +33,24 @@ public class AuthController {
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("Invalid email or password"));
     }
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestParam String email, @RequestParam String username, @RequestParam String password) {
-        if (userService.findByEmail(email) != null) { // 入力されたemailが既に登録済みか確認
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse("Email is already registered"));
-        }
-        // 新しいユーザーの情報を作成
-        User newUser = new User();
-        newUser.setEmail(email);
-        newUser.setUsername(username);
-        newUser.setPassword(password); // パスワードのハッシュ化はUserServiceで実施
-        
-        // 新しいユーザーを保存
-        userService.saveUser(newUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Registration successful");
+@PostMapping("/register")
+public ResponseEntity<?> register(
+    @RequestParam String email,
+    @RequestParam String username,
+    @RequestParam String password
+) {
+    if (userService.findByEmail(email) != null) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is already registered");
     }
+
+    User newUser = new User();
+    newUser.setEmail(email);
+    newUser.setUsername(username);
+    newUser.setPassword(password); // ハッシュ化はUserServiceで実施
+
+    userService.saveUser(newUser);
+    return ResponseEntity.status(HttpStatus.CREATED).body("Registration successful");
+}
     @GetMapping("/user")
     public ResponseEntity<?> getUserName(HttpServletRequest request) {
         HttpSession session = request.getSession(false); // 既存のセッションを取得（存在しない場合はnullを返す）
@@ -61,23 +64,23 @@ public class AuthController {
     }
     @PostMapping("/edit")
 public ResponseEntity<String> ChangeProfile(@RequestParam String username, @RequestParam String grade, @RequestParam String pr){
-    User newUser = (User) session.getAttribute("user");
-    try{
-        int grade1 = Integer.parseInt(grade);
-        newUser.setUsername(username);
+   User newUser = (User) session.getAttribute("user");
+     try{
+         int grade1 = Integer.parseInt(grade);
+       newUser.setUsername(username);
         newUser.setGrade(grade1);
         newUser.setPr(pr);
         session.removeAttribute("user");
         session.setAttribute("user", newUser);
         userService.UpdataUser(newUser);
-    }
+     }
     catch(NumberFormatException e){
         newUser.setUsername("Error");
-        newUser.setGrade(0);
-        newUser.setPr("Error");
-        session.removeAttribute("user");
+       newUser.setGrade(0);
+       newUser.setPr("Error");
+         session.removeAttribute("user");
         session.setAttribute("user", newUser);
-    }
+     }
         return new ResponseEntity<>("", HttpStatus.OK);
 
     

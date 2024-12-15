@@ -4,8 +4,8 @@
   font-size: 2.5rem;
   font-weight: bold;
   text-align: center;
-  color: white; /* 白色 */
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 少し浮き出た感じにする */
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* 検索バーのスタイル */
@@ -53,7 +53,6 @@
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
 
-/* 科目タイトル */
 .subject-card h3 {
   margin-top: 0;
   margin-bottom: 15px;
@@ -63,7 +62,6 @@
   line-height: 1.2;
 }
 
-/* 科目詳細情報 */
 .subject-card p {
   margin: 8px 0;
   font-size: 1rem;
@@ -71,7 +69,7 @@
   line-height: 1.6;
 }
 
-/* 追加ボタン */
+/* コメント追加ボタン */
 .subject-card button {
   margin-top: 15px;
   padding: 10px 16px;
@@ -90,20 +88,61 @@
   transform: scale(1.05);
 }
 
+/* コメント追加フォーム */
+.add-content-form {
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.add-content-form textarea,
+.add-content-form input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.add-content-form textarea:focus,
+.add-content-form input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+  outline: none;
+}
+
+.add-content-form button {
+  align-self: flex-end;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.add-content-form button:hover {
+  background-color: #218838;
+}
+
 /* 授業内容リスト */
 .contents-list {
-  width: 100%;
-  margin-top: 20px;
+  margin-top: 15px;
+  max-height: 200px; /* 最大表示高さを設定 */
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
 }
 
-.contents-list h4 {
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: #333333;
-  margin-bottom: 12px;
+.contents-list.expanded {
+  max-height: none; /* 展開時は高さを解除 */
 }
 
-/* 授業内容アイテム */
 .content-item {
   background: #f9f9f9;
   padding: 16px;
@@ -123,6 +162,22 @@
   color: #444444;
 }
 
+/* もっと見るボタン */
+.toggle-button {
+  margin-top: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.toggle-button:hover {
+  background-color: #0056b3;
+}
+
 /* 科目カードの配置コンテナ */
 .subject-list {
   display: grid;
@@ -131,86 +186,4 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-}
-/* 科目追加フォーム */
-.subject-add-form {
-  background-color: #f9f9f9;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 20px;
-}
-
-.form-title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 20px;
-  text-align: center;
-  color: #333;
-}
-
-.input-field {
-  width: 100%;
-  padding: 12px;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 15px;
-  transition: all 0.3s ease;
-}
-
-.input-field:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
-  outline: none;
-}
-
-.submit-button {
-  width: 100%;
-  background-color: #007bff;
-  color: white;
-  padding: 12px;
-  font-size: 1rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.submit-button:hover {
-  background-color: #0056b3;
-}
-.subject-card .add-content-form {
-  margin-top: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.add-content-form textarea,
-.add-content-form input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.add-content-form button {
-  background-color: #28a745;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.add-content-form button:hover {
-  background-color: #218838;
-}
-
-.error-message {
-  color: #d9534f;
-  font-size: 0.9rem;
-  margin-bottom: 10px;
-  text-align: center;
 }

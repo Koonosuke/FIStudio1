@@ -3,6 +3,7 @@
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
     "@mui/material": "^6.1.10",
-    "daisyui": "^4.12.14"
+    "daisyui": "^4.12.14",
+    "dotenv": "^16.4.7"
   }
 }
