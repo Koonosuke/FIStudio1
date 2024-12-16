@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./SubjectList.css";
 import Header from "./components/Header";
 import SubjectCard from "./components/SubjectCard";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 interface Content {
   id: number;
   content: string;
@@ -23,7 +24,7 @@ const SubjectList: React.FC = () => {
   const [subjects, setSubjects] = useState<Subject[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/subjects")
+    fetch(`${API_BASE_URL}/api/subjects`)
       .then((response) => response.json())
       .then((data) => setSubjects(data))
       .catch((error) => console.error("Error fetching subjects:", error));

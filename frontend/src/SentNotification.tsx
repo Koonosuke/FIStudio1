@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import "./Notification.css";
-
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 interface Notification{
     subject: string;
     value: string;
@@ -19,7 +19,7 @@ function SentNotification(){
             if (!userId) return;
             try{
                 const id = String(userId);
-                const response = await fetch(`http://localhost:8080/api/notifications/self?userId=${id}`,{
+                const response = await fetch(`${API_BASE_URL}/api/notifications/self?userId=${id}`,{
                     method: "GET",
                     headers:{
                         "Content-Type": "application/json",
@@ -38,7 +38,7 @@ function SentNotification(){
         fetchNotifications();
     },[userId]);
     useEffect(() =>{
-        const response = fetch("http://localhost:8080/api/user",{
+        const response = fetch(`${API_BASE_URL}/api/user`,{
             method: "GET",
             credentials: "include",
         })

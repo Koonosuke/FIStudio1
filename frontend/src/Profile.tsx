@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "./components/Header";
 import "./Profile.css";
-
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 interface User {
     username: string;
     email: string;
@@ -29,7 +29,7 @@ const HandleAdminClic = () => {
 } 
 
 useEffect(() =>{
-    const response =  fetch("http://localhost:8080/api/user", {
+    const response =  fetch(`${API_BASE_URL}/api/user`, {
         method: "GET",
         credentials: "include",
     })

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 interface Content {
   id: number;
   content: string;
@@ -33,7 +33,7 @@ const SubjectCard: React.FC<Subject> = ({
 
   useEffect(() => {
     // 初回レンダリング時に、特定の科目に関連する全ての投稿を取得する
-    fetch(`http://localhost:8080/api/subjects/${id}/contents`)
+    fetch(`${API_BASE_URL}/api/subjects/${id}/contents`)
       .then((response) => response.json())
       .then((data) => setCurrentContents(data))
       .catch((error) => console.error("Error fetching contents:", error));
@@ -49,7 +49,7 @@ const SubjectCard: React.FC<Subject> = ({
       };
 
       const response = await fetch(
-        `http://localhost:8080/api/subjects/${id}/contents`,
+        `${API_BASE_URL}/api/subjects/${id}/contents`,
         {
           method: "POST",
           headers: {
@@ -64,7 +64,7 @@ const SubjectCard: React.FC<Subject> = ({
         console.log("Content added successfully");
         // 新しい投稿を追加した後に全ての投稿を再取得して反映
         const updatedContents = await fetch(
-          `http://localhost:8080/api/subjects/${id}/contents`
+          `${API_BASE_URL}/api/subjects/${id}/contents`
         ).then((res) => res.json());
         setCurrentContents(updatedContents);
       } else {

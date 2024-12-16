@@ -2,6 +2,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "PasswordEncoder",
+      "request": "launch",
+      "mainClass": "com.example.PasswordEncoder",
+      "projectName": "samplelogin"
+    },
+    {
+      "type": "java",
       "name": "Spring Boot-SampleloginApplication<samplelogin>",
       "request": "launch",
       "cwd": "${workspaceFolder}",

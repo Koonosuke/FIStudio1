@@ -25,7 +25,7 @@ function DirectMessage() {
 
   useEffect(() => {
     // ログイン中のユーザーを取得
-    fetch("http://localhost:8080/api/user", {
+    fetch("http://133.20.51.163:8080/api/user", {
       method: "GET",
       credentials: "include",
       headers: {
@@ -46,7 +46,7 @@ function DirectMessage() {
     // 過去のメッセージを取得
     if (receiverEmail && currentUserEmail) {
       fetch(
-        `http://localhost:8080/api/messages/conversation?userEmail1=${currentUserEmail}&userEmail2=${receiverEmail}`
+        `http://133.20.51.163:8080/api/messages/conversation?userEmail1=${currentUserEmail}&userEmail2=${receiverEmail}`
       )
         .then((response) => response.json())
         .then((data) => {
@@ -70,7 +70,7 @@ function DirectMessage() {
     }
 
     // WebSocket接続の初期化
-    const socket = new SockJS("http://localhost:8080/ws");
+    const socket = new SockJS("http://133.20.51.163:8080/ws");
     const stompClient = new Client({
       webSocketFactory: () => socket,
       onConnect: () => {
@@ -116,7 +116,7 @@ function DirectMessage() {
   // メッセージを既読にする処理
   const markMessageAsRead = (messageId: number) => {
     fetch(
-      `http://localhost:8080/api/messages/mark-as-read?messageId=${messageId}`,
+      `http://133.20.51.163:8080/api/messages/mark-as-read?messageId=${messageId}`,
       {
         method: "POST",
       }

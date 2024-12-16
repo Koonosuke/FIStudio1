@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import SockJS from "sockjs-client";
 import HeaderAdmin from "../components/HeaderAdmin";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
     interface User {
     username: string;
     email: string;
@@ -29,7 +30,7 @@ import HeaderAdmin from "../components/HeaderAdmin";
 
     // ログイン中のユーザーを取得
     useEffect(() => {
-        fetch("http://localhost:8080/api/user", {
+        fetch(`${API_BASE_URL}/api/user`, {
         method: "GET",
         credentials: "include",
         headers: {
@@ -49,7 +50,7 @@ import HeaderAdmin from "../components/HeaderAdmin";
     // ユーザー一覧を取得
     useEffect(() => {
         if (currentUser) {
-        fetch("http://localhost:8080/api/users", {
+        fetch(`${API_BASE_URL}/api/users`, {
             method: "GET",
             credentials: "include",
             headers: {
@@ -70,7 +71,7 @@ import HeaderAdmin from "../components/HeaderAdmin";
         users.forEach((user) => {
             if (user.email !== currentUser.email) {
             fetch(
-                `http://localhost:8080/api/messages/latest?userEmail1=${currentUser.email}&userEmail2=${user.email}`,
+                `${API_BASE_URL}/api/messages/latest?userEmail1=${currentUser.email}&userEmail2=${user.email}`,
                 {
                 method: "GET",
                 credentials: "include",
@@ -115,7 +116,7 @@ import HeaderAdmin from "../components/HeaderAdmin";
     // WebSocket 接続の初期化とメッセージのリスニング
     useEffect(() => {
         if (currentUser) {
-        const socket = new SockJS("http://localhost:8080/ws");
+        const socket = new SockJS(`${API_BASE_URL}/ws`);
         const stompClient = new Client({
             webSocketFactory: () => socket,
             onConnect: () => {

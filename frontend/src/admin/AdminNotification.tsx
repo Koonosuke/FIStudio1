@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import HeaderAdmin from "../components/HeaderAdmin";
 import "../Notification.css";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 interface Notification{
     subject: string;
     value: string;
@@ -12,7 +13,7 @@ function AdminNotification(){
     useEffect(()=>{
         const fetchNotifications = async () =>{
             try{
-                const response = await fetch("http://localhost:8080/api/notifications",{
+                const response = await fetch(`${API_BASE_URL}/api/notifications`,{
                     method: "GET",
                     headers:{
                         "Content-Type": "application/json",
