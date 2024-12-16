@@ -37,7 +37,7 @@ const SubjectCard: React.FC<Subject> = ({
     const fetchContents = async () => {
       try {
         const response = await fetch(
-          `${API_BASE_URL}/api/subjects/${id}/contents`,
+          `http://localhost:8080/api/subjects/${id}/contents`,
           {
             method: "GET",
             credentials: "include",
@@ -68,7 +68,7 @@ const SubjectCard: React.FC<Subject> = ({
       };
 
       const response = await fetch(
-        `${API_BASE_URL}/api/subjects/${id}/contents`,
+        `http://localhost:8080/api/subjects/${id}/contents`,
         {
           method: "POST",
           credentials: "include",
