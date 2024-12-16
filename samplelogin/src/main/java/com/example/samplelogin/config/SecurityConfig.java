@@ -31,19 +31,49 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
         http.csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/isAdmin","api/notifications/self","/api/notifications","/api/login", "/api/register", "/api/users", "/api/user/**", "/api/messages/**", "/api/subjects/**", "/api/subjects/{subjectId}/contents/**", "/admin", "/ws/**", "/api/messages/latest","/api/edit").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers(
+                    "/api/login",
+                    "/api/logout",
+                    "/api/isAdmin",
+                    "api/notifications/self",
+                    "/api/notifications",
+                    "/api/edit",
+                    "/api/register",
+                    "/api/users",
+                    "/api/user",
+                    "/api/user/**",
+                    "/api/messages/**",
+                    "/api/subjects/**",
+                    "/api/subjects/{subjectId}/contents/**",
+                    "/admin",
+                    "/ws/**",
+                    "/api/messages/latest"
+                ).permitAll() // 許可されるエンドポイント
+                .anyRequest().authenticated() // 他のリクエストは認証を要求
             )
-            .formLogin(form -> form.disable());
+            .logout(logout -> logout
+                .logoutUrl("/api/logout")
+                .logoutSuccessHandler((request, response, authentication) -> {
+                    response.setStatus(200);
+                    response.getWriter().write("Logout successful");
+                })
+                .invalidateHttpSession(true) // セッションを無効化
+                .deleteCookies("JSESSIONID") // クッキーを削除
+            )
+            .sessionManagement(session -> session
+                .maximumSessions(1) // 最大セッション数を制限
+                .maxSessionsPreventsLogin(false) // 新しいセッションが既存のセッションを無効化
+            );
         return http.build();
     }
-    
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
+        configuration.addAllowedOrigin("http://localhost:3000");  // ローカルでのReact実行
+        configuration.addAllowedOrigin("http://frontendreact:3000"); // Docker内のReact実行（修正）
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 許可するHTTPメソッドをリスト化
+        configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -53,12 +83,14 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic");
+        config.enableSimpleBroker("/topic", "/topic/read-status"); // Adding /topic/read-status for read status updates
         config.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS();
+        registry.addEndpoint("/ws")
+                .setAllowedOriginPatterns("*") // WebSocketのCORSを許可
+                .withSockJS();
     }
 }

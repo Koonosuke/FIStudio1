@@ -12,7 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.samplelogin.model.SubjectContent;
+import com.example.samplelogin.model.User;
 import com.example.samplelogin.service.SubjectContentService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/subjects/{subjectId}/contents")
@@ -28,14 +32,26 @@ public class SubjectContentController {
     }
 
     @PostMapping
-    public SubjectContent addContent(@PathVariable Long subjectId, @RequestBody SubjectContent content) {
-        content.setSubjectId(subjectId);
-        
-        // userIdを任意のフィールドにする（必要であればデフォルト値を設定）
-        if (content.getUserId() == null) {
-            content.setUserId(-1L); // デフォルトのユーザーIDを設定（例えば、匿名ユーザーとして扱う）
+    public SubjectContent addContent(
+        @PathVariable Long subjectId,
+        @RequestBody SubjectContent content,
+        HttpServletRequest request
+    ) {
+        HttpSession session = request.getSession(false);
+    
+        if (session == null) {
+            throw new IllegalStateException("ログインが必要です");
         }
-
+    
+        User user = (User) session.getAttribute("user");
+    
+        if (user == null) {
+            throw new IllegalStateException("ユーザー情報が見つかりません");
+        }
+    
+        content.setSubjectId(subjectId);
+        content.setUserId(user.getId()); // ユーザIDを設定
+        content.setUserName(user.getUsername()); // ユーザ名を設定
         return subjectContentService.saveContent(content);
     }
 }

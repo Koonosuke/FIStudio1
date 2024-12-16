@@ -1,118 +1,118 @@
-.notification{
-    background-color: #003b46;
-    display:flex;
-    color: white;
-    height:100vh;
-    overflow: hidden;
+.notification {
+  background-color: #003b46;
+  display: flex;
+  color: white;
+  height: 100vh;
+  overflow: hidden;
 }
-.sidebar{
-    background-color: #003b46;
-    text-align:center;
-    width:30%;
-    padding: 10px;
-    border-right: 2px solid #66a5ad;
+.sidebar {
+  background-color: #003b46;
+  text-align: center;
+  width: 30%;
+  padding: 10px;
+  border-right: 2px solid #66a5ad;
 }
-.sidebar ul{
-    list-style:none;
-    padding: 0;
-    margin: 0;
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
-.sidebar-item{
-    margin:15px 0;
-    padding:10px;
-    font-size:1.5rem;
-    white-space:nowrap;
-    color:white;
-    cursor: pointer;
+.sidebar-item {
+  margin: 15px 0;
+  padding: 10px;
+  font-size: 1.5rem;
+  white-space: nowrap;
+  color: white;
+  cursor: pointer;
 }
-.sidebar-item:hover{
-    background-color: #66a5ad;
-    border-radius: 5px;
+.sidebar-item:hover {
+  background-color: #66a5ad;
+  border-radius: 5px;
 }
 .notices {
-    background-color: #003b46;
-    text-align: left;
-    width: 70%;
-    padding: 20px;
-    overflow-y: auto;
-    height: calc(100vh - 20px);
-    box-sizing: border-box;
-    margin: 0 auto;
-    border-left: 1px solid #66a5ad;
+  background-color: #003b46;
+  text-align: left;
+  width: 70%;
+  padding: 20px;
+  overflow-y: auto;
+  height: calc(100vh - 20px);
+  box-sizing: border-box;
+  margin: 0 auto;
+  border-left: 1px solid #66a5ad;
 }
 
 .notice-item {
-    border-top: 10px solid #66a5ad;
-    margin-top: 20px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    display: flex;
-    flex-direction: column;
+  border-top: 10px solid #66a5ad;
+  margin-top: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .notice-item:nth-last-child(1) {
-    border-bottom: 1px solid #66a5ad;
+  border-bottom: 1px solid #66a5ad;
 }
 
 .notice-item .head {
-    font-weight: bold;
-    font-size: 18px;
-    color: #ffffff;
-    margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 18px;
+  color: #ffffff;
+  margin-bottom: 10px;
 }
 
 .notice-item .body {
-    font-size: 16px;
-    color: #d1e8e2;
+  font-size: 16px;
+  color: #d1e8e2;
 }
 
 @media screen and (max-width: 480px) {
-    .notices {
-        width: 100%;
-        padding: 10px;
-    }
-    .notice-item {
-        padding: 10px;
-        margin-top: 10px;
-    }
-    .notice-item .head {
-        font-size: 16px;
-    }
-    .notice-item .body {
-        font-size: 14px;
-    }
+  .notices {
+    width: 100%;
+    padding: 10px;
+  }
+  .notice-item {
+    padding: 10px;
+    margin-top: 10px;
+  }
+  .notice-item .head {
+    font-size: 16px;
+  }
+  .notice-item .body {
+    font-size: 14px;
+  }
 }
-#link{
-    text-decoration-line: none;
-    color:white;
-    transition: color 0.3s ease;
+#link {
+  text-decoration-line: none;
+  color: white;
+  transition: color 0.3s ease;
 }
-#link:hover{
-    color: #66a5ad;
+#link:hover {
+  color: #66a5ad;
 }
 .admin-notice {
-    background-color: #a60000; /* 管理者用の目立つ背景色 */
-    color: #ffffff; /* テキストを白に設定 */
-    border: 2px solid #ffcc00; /* 金色の枠線を追加 */
-    border-radius: 8px; /* 角を丸くする */
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 少し浮いているような影をつける */
+  background-color: #a60000; /* 管理者用の目立つ背景色 */
+  color: #ffffff; /* テキストを白に設定 */
+  border: 2px solid #ffcc00; /* 金色の枠線を追加 */
+  border-radius: 8px; /* 角を丸くする */
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 少し浮いているような影をつける */
 }
 
 .admin-notice .head {
-    color: #ffcc00; /* 件名を金色にする */
-    font-size: 20px; /* 件名を少し大きくする */
+  color: #ffcc00; /* 件名を金色にする */
+  font-size: 20px; /* 件名を少し大きくする */
 }
 
 .admin-notice .body {
-    color: #ffffff; /* 内容を白にする */
+  color: #ffffff; /* 内容を白にする */
 }
 
 .admin-notice::before {
-    content: "⭐ 管理者のお知らせ";
-    display: block;
-    font-weight: bold;
-    font-size: 14px;
-    color: #ffcc00;
-    margin-bottom: 10px;
+  content: "⭐ 管理者のお知らせ";
+  display: block;
+  font-weight: bold;
+  font-size: 14px;
+  color: #ffcc00;
+  margin-bottom: 10px;
 }

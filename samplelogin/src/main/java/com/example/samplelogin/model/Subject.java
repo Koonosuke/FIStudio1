@@ -1,5 +1,6 @@
 package com.example.samplelogin.model;
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,13 +28,13 @@ public class Subject {
     @Column(name = "user_id", nullable = false)
     private String userId;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable = true) // content をオプションにする
     private String content;
 
-    @Column
+    @Column(nullable = true) // evaluation をオプションにする
     private Integer evaluation;
 
-    @Column(name = "past_exams", columnDefinition = "TEXT")
+    @Column(name = "past_exams", columnDefinition = "TEXT", nullable = true) // pastExams をオプションにする
     private String pastExams;
 
     // コンストラクタ
@@ -50,8 +51,18 @@ public class Subject {
         this.pastExams = pastExams;
     }
 
-    // Getters and Setters
+    // 必須フィールドのみのコンストラクタ
+    public Subject(String subjectName, String teacherName, int year, String userId) {
+        this.subjectName = subjectName;
+        this.teacherName = teacherName;
+        this.year = year;
+        this.userId = userId;
+        this.content = "";
+        this.evaluation = 0;
+        this.pastExams = "";
+    }
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -128,10 +139,5 @@ public class Subject {
                 ", evaluation=" + evaluation +
                 ", pastExams='" + pastExams + '\'' +
                 '}';
-    }
-
-    public Subject orElseThrow(Object object) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
     }
 }

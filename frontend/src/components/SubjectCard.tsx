@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-
+import { FaStar } from "react-icons/fa";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 interface Content {
+  userName: string;
   id: number;
   content: string;
   evaluation: number;
   pastExams: string;
   createdAt: string;
-  userId: string;
+  userId: string; // ユーザーID
 }
 
 interface Subject {
@@ -14,7 +16,6 @@ interface Subject {
   subjectName: string;
   teacherName: string;
   year: number;
-  contents?: Content[]; // Optional propertyにすることでundefinedを許容
 }
 
 const SubjectCard: React.FC<Subject> = ({
@@ -22,21 +23,40 @@ const SubjectCard: React.FC<Subject> = ({
   subjectName,
   teacherName,
   year,
-  contents = [], // 初期値を空の配列にすることでundefinedを防ぐ
 }) => {
+  const [currentContents, setCurrentContents] = useState<Content[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [newContent, setNewContent] = useState("");
   const [newEvaluation, setNewEvaluation] = useState(0);
   const [newPastExams, setNewPastExams] = useState("");
-  const [userId, setUserId] = useState(""); // ユーザーIDを管理するための状態追加
-  const [currentContents, setCurrentContents] = useState(contents); // 現在のコンテンツを管理する状態を追加
+  const [errorMessage, setErrorMessage] = useState("");
+  const [expanded, setExpanded] = useState(false); // 展開状態を管理
 
+  // 投稿を取得する処理]
   useEffect(() => {
-    // 初回レンダリング時に、特定の科目に関連する全ての投稿を取得する
-    fetch(`http://localhost:8080/api/subjects/${id}/contents`)
-      .then((response) => response.json())
-      .then((data) => setCurrentContents(data))
-      .catch((error) => console.error("Error fetching contents:", error));
+    const fetchContents = async () => {
+      try {
+        const response = await fetch(
+          `${API_BASE_URL}/api/subjects/${id}/contents`,
+          {
+            method: "GET",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("投稿の取得に失敗しました");
+        }
+
+        const data = await response.json();
+        setCurrentContents(data);
+      } catch (error) {
+        console.error("Error fetching contents:", error);
+      }
+    };
+
+    fetchContents();
   }, [id]);
 
   const handleAddContent = async () => {
@@ -45,34 +65,46 @@ const SubjectCard: React.FC<Subject> = ({
         content: newContent,
         evaluation: newEvaluation,
         pastExams: newPastExams,
-        userId: userId, // ユーザーIDを追加
       };
 
       const response = await fetch(
-        `http://localhost:8080/api/subjects/${id}/contents`,
+        `${API_BASE_URL}/api/subjects/${id}/contents`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json", // ヘッダーに適切な Content-Type を設定
-            Accept: "application/json", // 必要であれば、Acceptヘッダーも追加
-          },
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(contentData),
         }
       );
 
       if (response.ok) {
-        console.log("Content added successfully");
-        // 新しい投稿を追加した後に全ての投稿を再取得して反映
-        const updatedContents = await fetch(
-          `http://localhost:8080/api/subjects/${id}/contents`
-        ).then((res) => res.json());
-        setCurrentContents(updatedContents);
+        const updatedContent = await response.json();
+        setCurrentContents((prev) => [...prev, updatedContent]);
+        setNewContent("");
+        setNewEvaluation(0);
+        setNewPastExams("");
       } else {
-        console.error("Error adding content:", response.statusText);
+        throw new Error("コメントの投稿に失敗しました");
       }
     } catch (error) {
-      console.error("Network error:", error);
+      setErrorMessage("コメントの投稿に失敗しました。もう一度お試しください。");
+      console.error("Error adding content:", error);
     }
+  };
+
+  const renderStars = (rating: number) => {
+    return (
+      <div style={{ display: "flex", alignItems: "center" }}>
+        {Array.from({ length: 5 }, (_, index) => (
+          <FaStar
+            key={index}
+            color={index < rating ? "#FFD700" : "#ddd"} // 黄色(#FFD700)と灰色(#ddd)
+            size={16}
+            style={{ marginRight: "2px" }}
+          />
+        ))}
+      </div>
+    );
   };
 
   return (
@@ -80,20 +112,14 @@ const SubjectCard: React.FC<Subject> = ({
       <h3>{subjectName}</h3>
       <p>担当教員: {teacherName}</p>
       <p>受講年度: {year}</p>
-      <button onClick={() => setShowForm(!showForm)}>+</button>
+      <button onClick={() => setShowForm(!showForm)}>コメントを追加</button>
       {showForm && (
         <div className="add-content-form">
-          <input
-            type="text"
-            placeholder="ユーザーID"
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-          />
           <textarea
             placeholder="授業内容"
             value={newContent}
             onChange={(e) => setNewContent(e.target.value)}
-          ></textarea>
+          />
           <input
             type="number"
             placeholder="評価 (0-5)"
@@ -104,26 +130,36 @@ const SubjectCard: React.FC<Subject> = ({
             placeholder="過去問情報"
             value={newPastExams}
             onChange={(e) => setNewPastExams(e.target.value)}
-          ></textarea>
-          <button onClick={handleAddContent}>追加</button>
+          />
+          <button onClick={handleAddContent}>投稿</button>
         </div>
       )}
-      <div className="contents-list">
+      <div className={`contents-list ${expanded ? "expanded" : "collapsed"}`}>
         <h4>投稿内容:</h4>
         {currentContents.length > 0 ? (
-          currentContents.map((content) => (
-            <div key={content.id} className="content-item">
-              <p>{content.content}</p>
-              <p>評価: {content.evaluation} / 5</p>
-              <p>過去問: {content.pastExams}</p>
-              <p>投稿者: {content.userId}</p>
-              <p>投稿日: {new Date(content.createdAt).toLocaleString()}</p>
-            </div>
-          ))
+          currentContents
+            .slice(0, expanded ? currentContents.length : 1)
+            .map((content) => (
+              <div key={content.id} className="content-item">
+                <p>投稿者: {content.userName}</p>
+                <p>{content.content}</p>
+                <p>評価: {renderStars(content.evaluation)}</p>
+                <p>過去問: {content.pastExams || "なし"}</p>
+                <p>投稿日: {new Date(content.createdAt).toLocaleString()}</p>
+              </div>
+            ))
         ) : (
           <p>まだ投稿がありません。</p>
         )}
       </div>
+      {currentContents.length > 0 && (
+        <button
+          className="toggle-button"
+          onClick={() => setExpanded(!expanded)}
+        >
+          {expanded ? "閉じる" : "もっと見る"}
+        </button>
+      )}
     </div>
   );
 };
