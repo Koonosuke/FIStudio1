@@ -23,7 +23,7 @@ function AddNotification() {
         }
         const notification = {userId, subject, value};
         try{
-            const response = await fetch(`${API_BASE_URL}:8080/api/notifications`,{
+            const response = await fetch(`${API_BASE_URL}/api/notifications`,{
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
