@@ -16,6 +16,7 @@ function Login() {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded", //例：http://localhost:8080/api/login/email=実際に入力されたメール?password=暗号化されたパスワード
         },
+        credentials: "include",
         body: new URLSearchParams({ email, password }),
       });
 
