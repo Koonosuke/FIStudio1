@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 interface Content {
   userName: string;
   id: number;
@@ -124,8 +124,12 @@ const SubjectCard: React.FC<Subject> = ({
             type="number"
             placeholder="評価 (0-5)"
             value={newEvaluation}
-            onChange={(e) => setNewEvaluation(Number(e.target.value))}
+            onChange={(e) => {
+              const value = Math.max(0, Math.min(5, Number(e.target.value))); // 0から5の範囲に制限
+              setNewEvaluation(value);
+            }}
           />
+
           <textarea
             placeholder="過去問情報"
             value={newPastExams}
