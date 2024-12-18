@@ -36,9 +36,6 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
                 .requestMatchers("/api/isAdmin","api/notifications/self","/api/notifications","/api/login", "/api/register", "/api/users", "/api/user/**", "/api/messages/**", "/api/subjects/**", "/api/subjects/{subjectId}/contents/**", "/admin", "/ws/**", "/api/messages/latest","/api/edit").permitAll()
                 .anyRequest().authenticated()
             )
-            .csrf(csrf -> {
-                csrf.ignoringRequestMatchers("/api/login","/api/register");
-            })
             .formLogin(form -> form.disable());
         return http.build();
     }
