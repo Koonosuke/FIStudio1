@@ -32,5 +32,22 @@ public class UserService {
     public User UpdataUser(User user) {
         return userRepository.save(user);
     }
+
+    public void DeleteUser(User user) {
+        userRepository.delete(user);
+    }
+
+    public boolean isUserAdmin(String userId){
+        Long sendingUserId = null;
+        try{
+            sendingUserId = Long.parseLong(userId);
+        }catch(NumberFormatException e){
+            System.err.println(e.getMessage());
+            return false;
+        }
+        System.out.println("isUserAdminを実行するゾ");
+        Boolean isAdmin = userRepository.isUserAdmin(sendingUserId);
+        return isAdmin != null ? isAdmin : false;
+    }
 }
 //サービスはビジネスロジックを管理する層です。リポジトリを利用してデータを操作し、複雑な処理や条件分岐などのビジネスロジックを実装

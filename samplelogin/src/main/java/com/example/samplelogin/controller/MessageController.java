@@ -23,7 +23,6 @@ public class MessageController {
     @SendTo("/topic/public")
     public Message sendMessage(Message message) {
         message.setSentAt(LocalDateTime.now());
-
         // メッセージをデータベースに保存
         messageService.saveMessage(message.getSenderEmail(), message.getReceiverEmail(), message.getContent());
         return message;
