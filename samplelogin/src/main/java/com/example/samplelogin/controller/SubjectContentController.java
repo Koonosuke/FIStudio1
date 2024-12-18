@@ -11,12 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.samplelogin.dto.SubjectContentRequestDTO;
 import com.example.samplelogin.model.SubjectContent;
-import com.example.samplelogin.model.User;
 import com.example.samplelogin.service.SubjectContentService;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/subjects/{subjectId}/contents")
@@ -33,25 +30,15 @@ public class SubjectContentController {
 
     @PostMapping
     public SubjectContent addContent(
-        @PathVariable Long subjectId,
-        @RequestBody SubjectContent content,
-        HttpServletRequest request
+        @RequestBody SubjectContentRequestDTO requestDTO
     ) {
-        HttpSession session = request.getSession(false);
-    
-        if (session == null) {
-            throw new IllegalStateException("ログインが必要です");
+        if (requestDTO.getUserId() == null || requestDTO.getUsername() == null) {
+            throw new IllegalStateException("ユーザー情報を取得できませんでした");
         }
-    
-        User user = (User) session.getAttribute("user");
-    
-        if (user == null) {
-            throw new IllegalStateException("ユーザー情報が見つかりません");
-        }
-    
-        content.setSubjectId(subjectId);
-        content.setUserId(user.getId()); // ユーザIDを設定
-        content.setUserName(user.getUsername()); // ユーザ名を設定
+        SubjectContent content = requestDTO.getContent();
+        content.setSubjectId(requestDTO.getSubjectId());
+        content.setUserId(requestDTO.getUserId()); // ユーザIDを設定
+        content.setUserName(requestDTO.getUsername()); // ユーザ名を設定
         return subjectContentService.saveContent(content);
     }
 }
