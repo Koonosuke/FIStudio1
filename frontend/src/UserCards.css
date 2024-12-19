@@ -1,0 +1,107 @@
+/* 全体のコンテナ */
+.user-profile-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 40px; /* カード間の間隔を広げる */
+  padding: 20px;
+  background-color: #00343f;
+}
+
+/* カード本体 */
+.user-profile-card {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  perspective: 1000px;
+}
+
+.user-profile-card .card-front,
+.user-profile-card .card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  text-align: center;
+  transition: transform 0.6s;
+}
+
+.user-profile-card .card-front {
+  background-color: #ffffff;
+}
+
+.user-profile-card .card-back {
+  background-color: #007bff;
+  color: #ffffff;
+  transform: rotateY(180deg);
+}
+
+/* カードのフリップ効果 */
+.user-profile-card.flipped .card-front {
+  transform: rotateY(180deg);
+}
+
+.user-profile-card.flipped .card-back {
+  transform: rotateY(0);
+}
+
+/* カードのタイトル */
+.user-profile-card h3 {
+  font-size: 18px;
+  margin-bottom: 12px;
+  color: #00343f;
+}
+
+.user-profile-card .card-back h3 {
+  color: #ffffff;
+}
+
+/* カードの本文 */
+.user-profile-card p {
+  font-size: 14px;
+  color: #555555;
+  margin: 8px 0;
+}
+
+.user-profile-card .card-back p {
+  color: #ffffff;
+}
+
+/* ボタンのスタイル */
+.user-profile-card button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.user-profile-card button:hover {
+  background-color: #003d80;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 600px) {
+  .user-profile-card {
+    height: 250px;
+  }
+
+  .user-profile-card h3 {
+    font-size: 16px;
+  }
+
+  .user-profile-card p {
+    font-size: 12px;
+  }
+
+  .user-profile-card button {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+}

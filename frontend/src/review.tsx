@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import "./UserReview.css";
+import Header from "./components/Header";
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 interface Content {
@@ -68,32 +69,35 @@ const UserContentsPage: React.FC = () => {
   }
 
   return (
-    <div className="user-contents-page">
-      <h1>あなたの投稿したコメント一覧</h1>
-      {userContents.length > 0 ? (
-        <ul>
-          {userContents.map((content) => (
-            <li key={content.id} className="content-card">
-              <h2>{content.subjectName || "科目名未設定"}</h2>
-              <p>
-                <strong>コメント:</strong> {content.content}
-              </p>
-              <p>
-                <strong>評価:</strong> {renderStars(content.evaluation)}
-              </p>
-              <p>
-                <strong>過去問情報:</strong> {content.pastExams || "なし"}
-              </p>
-              <p>
-                <strong>投稿日:</strong>{" "}
-                {new Date(content.createdAt).toLocaleString()}
-              </p>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>まだコメントを投稿していません。</p>
-      )}
+    <div className="test">
+      <Header />
+      <div className="user-contents-page">
+        <h1>あなたの投稿したコメント一覧</h1>
+        {userContents.length > 0 ? (
+          <ul>
+            {userContents.map((content) => (
+              <li key={content.id} className="content-card">
+                <h2>{content.subjectName || "科目名未設定"}</h2>
+                <p>
+                  <strong>コメント:</strong> {content.content}
+                </p>
+                <p>
+                  <strong>評価:</strong> {renderStars(content.evaluation)}
+                </p>
+                <p>
+                  <strong>過去問情報:</strong> {content.pastExams || "なし"}
+                </p>
+                <p>
+                  <strong>投稿日:</strong>{" "}
+                  {new Date(content.createdAt).toLocaleString()}
+                </p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>まだコメントを投稿していません。</p>
+        )}
+      </div>
     </div>
   );
 };

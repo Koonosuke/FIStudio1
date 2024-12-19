@@ -15,6 +15,7 @@ import Register from "./Register";
 import Review from "./review";
 import SentNotification from "./SentNotification";
 import SubjectList from "./SubjectList";
+import UsersCards from "./UsersCards";
 function App() {
   return (
     <Router>
@@ -32,6 +33,7 @@ function App() {
           path="/notificationAdmin/add"
           element={<AdminAddNotification />}
         />
+        <Route path="/user-list" element={<UsersCards />} />
         <Route path="/profile/review" element={<Review />} />
         <Route
           path="/notificationAdmin/send"
