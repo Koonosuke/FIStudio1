@@ -12,6 +12,7 @@ import Notification from "./Notification";
 import Profile from "./Profile";
 import ProfileEdit from "./ProfileEdit";
 import Register from "./Register";
+import Review from "./review";
 import SentNotification from "./SentNotification";
 import SubjectList from "./SubjectList";
 function App() {
@@ -31,6 +32,7 @@ function App() {
           path="/notificationAdmin/add"
           element={<AdminAddNotification />}
         />
+        <Route path="/profile/review" element={<Review />} />
         <Route
           path="/notificationAdmin/send"
           element={<AdminSentNotification />}
