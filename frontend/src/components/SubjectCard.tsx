@@ -44,11 +44,9 @@ const SubjectCard: React.FC<Subject> = ({
             headers: { "Content-Type": "application/json" },
           }
         );
-
         if (!response.ok) {
           throw new Error("投稿の取得に失敗しました");
         }
-
         const data = await response.json();
         setCurrentContents(data);
       } catch (error) {

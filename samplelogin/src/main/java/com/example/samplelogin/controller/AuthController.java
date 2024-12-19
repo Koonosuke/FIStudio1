@@ -1,4 +1,7 @@
 package com.example.samplelogin.controller;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,40 +54,55 @@ public ResponseEntity<?> register(
     userService.saveUser(newUser);
     return ResponseEntity.status(HttpStatus.CREATED).body("Registration successful");
 }
-    @GetMapping("/user")
-    public ResponseEntity<?> getUserName(HttpServletRequest request) {
-        HttpSession session = request.getSession(false); // 既存のセッションを取得（存在しない場合はnullを返す）
-        if (session != null) {
-            User user = (User) session.getAttribute("user");
-            if (user != null) {
-                return ResponseEntity.ok(user);
-            }
+@GetMapping("/user")
+public ResponseEntity<?> getUserProfile(HttpServletRequest request) {
+    HttpSession session = request.getSession(false); // 既存のセッションを取得
+    if (session != null) {
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            // 必要なデータを Map に格納して返す
+            Map<String, Object> userData = new HashMap<>();
+            userData.put("username", user.getUsername());
+            userData.put("email", user.getEmail());
+            userData.put("grade", user.getGrade());
+            userData.put("pr", user.getPr());
+            return ResponseEntity.ok(userData);
         }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("Not found or not logged in"));
     }
-    @PostMapping("/edit")
-public ResponseEntity<String> ChangeProfile(@RequestParam String username, @RequestParam String grade, @RequestParam String pr){
-   User newUser = (User) session.getAttribute("user");
-     try{
-         int grade1 = Integer.parseInt(grade);
-       newUser.setUsername(username);
-        newUser.setGrade(grade1);
-        newUser.setPr(pr);
-        session.removeAttribute("user");
-        session.setAttribute("user", newUser);
-        userService.UpdataUser(newUser);
-     }
-    catch(NumberFormatException e){
-        newUser.setUsername("Error");
-       newUser.setGrade(0);
-       newUser.setPr("Error");
-         session.removeAttribute("user");
-        session.setAttribute("user", newUser);
-     }
-        return new ResponseEntity<>("", HttpStatus.OK);
-
-    
+    // セッションがない場合やユーザーが見つからない場合
+    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .body(new ErrorResponse("User not found or not logged in"));
 }
+
+    @PostMapping("/edit")
+    public ResponseEntity<String> changeProfile(
+            @RequestParam String username, 
+            @RequestParam int grade, 
+            @RequestParam String pr, 
+            HttpSession session) {
+        User currentUser = (User) session.getAttribute("user");
+        if (currentUser == null) {
+            return new ResponseEntity<>("Unauthorized", HttpStatus.FORBIDDEN);
+        }
+    
+        // バリデーション
+        if (username.isEmpty() || grade <= 0 || pr.isEmpty()) {
+            return new ResponseEntity<>("Invalid input", HttpStatus.BAD_REQUEST);
+        }
+    
+        try {
+            // 更新
+            currentUser.setUsername(username);
+            currentUser.setGrade(grade);
+            currentUser.setPr(pr);
+    
+            userService.UpdateUser(currentUser); // UserService のメソッドを利用
+            return new ResponseEntity<>("Profile updated successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("An error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false); // 既存のセッションを取得
