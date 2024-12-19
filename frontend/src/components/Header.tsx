@@ -7,7 +7,6 @@ type LogoutModalProps = {
   onConfirm: () => void;
   onCancel: () => void;
 };
-
 // モーダルコンポーネント
 function LogoutModal({ onConfirm, onCancel }: LogoutModalProps) {
   return ReactDOM.createPortal(
@@ -77,7 +76,7 @@ function Header() {
             <a href="/user-list">ユーザー一覧</a>
           </li>
           <li>
-            <a href="/chat">チャット</a>
+            <a href="/chat">DM</a>
           </li>
           <li>
             <a href="/profile">プロフィール</a>
