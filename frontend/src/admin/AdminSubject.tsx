@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/HeaderAdmin";
-import SubjectCard from "../components/SubjectCard";
+import SubjectCard from "../components/SubjectCardAdmin";
 import "./AdminSubject.css";
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 interface Content {
