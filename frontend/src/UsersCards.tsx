@@ -23,9 +23,8 @@ interface Content {
 
 const UserCards: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
-  const [userContents, setUserContents] = useState<Record<number, Content[]>>(
-    {}
-  );
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]); // 絞り込み後のユーザ
+  const [searchQuery, setSearchQuery] = useState<string>(""); // 検索クエリ
   const [flippedCards, setFlippedCards] = useState<Record<number, boolean>>({});
 
   useEffect(() => {
@@ -39,6 +38,7 @@ const UserCards: React.FC = () => {
 
         const data = await response.json();
         setUsers(data);
+        setFilteredUsers(data); // 初期表示では全ユーザを表示
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -54,11 +54,36 @@ const UserCards: React.FC = () => {
     }));
   };
 
+  // 検索処理
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const query = event.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    const filtered = users.filter(
+      (user) =>
+        user.username.toLowerCase().includes(query) ||
+        user.email.toLowerCase().includes(query) ||
+        user.grade.toString().includes(query) ||
+        user.pr.toLowerCase().includes(query)
+    );
+
+    setFilteredUsers(filtered);
+  };
+
   return (
     <div className="head">
       <Header />
+      <div className="search-bar">
+        <input
+          type="text"
+          placeholder="ユーザ名、Email、Grade、PRで検索"
+          value={searchQuery}
+          onChange={handleSearch}
+          className="search-input"
+        />
+      </div>
       <div className="user-profile-container">
-        {users.map((user) => (
+        {filteredUsers.map((user) => (
           <div
             key={user.id}
             className={`user-profile-card ${

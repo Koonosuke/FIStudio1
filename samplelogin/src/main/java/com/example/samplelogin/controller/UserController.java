@@ -35,7 +35,6 @@ public class UserController {
         userService.DeleteUser(user);
     return ResponseEntity.ok("Delete Successful!");
     }
-
     @GetMapping("/users")
     public List<User> getAllUsers() {
         List<User> userList = new ArrayList<User>();//管理者をのぞいた全ユーザを返せるようにしたぜ。
