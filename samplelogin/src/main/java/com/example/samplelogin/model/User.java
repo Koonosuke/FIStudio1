@@ -27,7 +27,7 @@ public class User {
     @Column(nullable = false)//学年  新規追加したぞ
     private int grade;
 
-    @Column(nullable = false)//頑張ったこと  新規追加したぞ
+    @Column(nullable = true)//頑張ったこと  新規追加したぞ
     private String pr;
 
     @Column(name = "isadmin", nullable = false)

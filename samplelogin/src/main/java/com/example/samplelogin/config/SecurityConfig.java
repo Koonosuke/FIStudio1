@@ -47,7 +47,8 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
                     "/api/subjects/{subjectId}/contents/**",
                     "/admin",
                     "/ws/**",
-                    "/api/messages/latest"
+                    "/api/messages/latest",
+                    "/api/userDelete"
                 ).permitAll() // 許可されるエンドポイント
                 .anyRequest().authenticated() // 他のリクエストは認証を要求
             )
