@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import "./Notification.css";
-
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 interface Notification {
     notificationId: Number;
     userId: Number;
@@ -16,7 +16,7 @@ function Notification(){
     useEffect(() => {
         const fetchNotifications = async () => {
             try{
-                const response = await fetch("http://localhost:8080/api/notifications",{
+                const response = await fetch(`${API_BASE_URL}/api/notifications`,{
                     method: "GET",
                     headers:{
                         "Content-Type": "application/json",
@@ -41,7 +41,7 @@ function Notification(){
             for (const notice of notifications){
                 try{
                     const response = await fetch(
-                        `http://localhost:8080/api/isAdmin?userId=${notice.userId}`,
+                        `${API_BASE_URL}/api/isAdmin?userId=${notice.userId}`,
                         {
                             method: "GET",
                             credentials: "include",

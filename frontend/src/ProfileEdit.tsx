@@ -4,6 +4,8 @@ import Header from "./components/Header";
 import "./Profile.css";
 import "./ProfileEdit.css";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 function ProfileEdit(){
 //const [email, setEmail] = useState("");
 const [username, setUsername] = useState("");
@@ -35,7 +37,7 @@ const HandleAdminClic = () => {
 
 const handleEdit = async () => {
     try {
-    const response = await fetch("http://localhost:8080/api/edit", {
+    const response = await fetch(`${API_BASE_URL}/api/edit`, {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded", 
