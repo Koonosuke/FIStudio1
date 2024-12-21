@@ -28,22 +28,18 @@ public class SubjectController {
     public List<Subject> getAllSubjects() {
         return subjectService.getAllSubjects();
     }
-
     @GetMapping("/{id}")
     public Subject getSubjectById(@PathVariable Long id) {
         return subjectService.getSubjectById(id);
     }
-
     @PostMapping
     public Subject createSubject(@RequestBody Subject subject) {
         return subjectService.saveSubject(subject);
     }
-
     @PutMapping("/{id}")
     public Subject updateSubject(@PathVariable Long id, @RequestBody Subject subjectDetails) {
         return subjectService.updateSubject(id, subjectDetails);
     }
-
     @DeleteMapping("/{id}")
     public String deleteSubject(@PathVariable Long id) {
         subjectService.deleteSubject(id);

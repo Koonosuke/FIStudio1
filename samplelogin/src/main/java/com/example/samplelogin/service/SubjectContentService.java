@@ -21,4 +21,9 @@ public class SubjectContentService {
     public SubjectContent saveContent(SubjectContent content) {
         return subjectContentRepository.save(content);
     }
+
+    // 新規追加: ユーザーIDに基づいて投稿を取得するメソッド
+    public List<SubjectContent> getContentsByUserId(Long userId) {
+        return subjectContentRepository.findByUserId(userId);
+    }
 }

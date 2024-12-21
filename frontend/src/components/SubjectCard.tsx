@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
-
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 interface Content {
   userName: string;
   id: number;
@@ -37,18 +37,16 @@ const SubjectCard: React.FC<Subject> = ({
     const fetchContents = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/subjects/${id}/contents`,
+          `${API_BASE_URL}/api/subjects/${id}/contents`,
           {
             method: "GET",
             credentials: "include",
             headers: { "Content-Type": "application/json" },
           }
         );
-
         if (!response.ok) {
           throw new Error("投稿の取得に失敗しました");
         }
-
         const data = await response.json();
         setCurrentContents(data);
       } catch (error) {
@@ -68,7 +66,7 @@ const SubjectCard: React.FC<Subject> = ({
       };
 
       const response = await fetch(
-        `http://localhost:8080/api/subjects/${id}/contents`,
+        `${API_BASE_URL}/api/subjects/${id}/contents`,
         {
           method: "POST",
           credentials: "include",
@@ -125,8 +123,10 @@ const SubjectCard: React.FC<Subject> = ({
             placeholder="評価 (0-5)"
             value={newEvaluation}
             onChange={(e) => {
-              const value = Math.max(0, Math.min(5, Number(e.target.value))); // 0から5の範囲に制限
-              setNewEvaluation(value);
+              const value = Number(e.target.value);
+              if (value >= 0 && value <= 5) {
+                setNewEvaluation(value);
+              }
             }}
           />
 

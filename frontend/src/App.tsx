@@ -12,8 +12,10 @@ import Notification from "./Notification";
 import Profile from "./Profile";
 import ProfileEdit from "./ProfileEdit";
 import Register from "./Register";
+import Review from "./review";
 import SentNotification from "./SentNotification";
 import SubjectList from "./SubjectList";
+import UsersCards from "./UsersCards";
 function App() {
   return (
     <Router>
@@ -26,11 +28,19 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/chat" element={<ChatList />} />
         <Route path="/admin" element={<Admins />} />
-        <Route path="/notificationAdmin" element={<AdminNotification />}/>
-        <Route path="/notificationAdmin/add" element={<AdminAddNotification />}/>
-        <Route path="/notificationAdmin/send" element={<AdminSentNotification />}/>
-        <Route path="/profile" element={<Profile/>}/>
-        <Route path="/profile/edit" element={<ProfileEdit/>}/>
+        <Route path="/notificationAdmin" element={<AdminNotification />} />
+        <Route
+          path="/notificationAdmin/add"
+          element={<AdminAddNotification />}
+        />
+        <Route path="/user-list" element={<UsersCards />} />
+        <Route path="/profile/review" element={<Review />} />
+        <Route
+          path="/notificationAdmin/send"
+          element={<AdminSentNotification />}
+        />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/edit" element={<ProfileEdit />} />
         <Route path="/subjects" element={<SubjectList />} />
         <Route
           path="/direct-message/:receiverEmail"

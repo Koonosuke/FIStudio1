@@ -18,13 +18,12 @@ import jakarta.servlet.http.HttpSession;
 @RestController//RESTful APIを作成→エンドポイントの指定（リクエスト許可）により異なるシステム間でデータのやり取りが容易に
 @RequestMapping("/api")//コントローラーのエンドポイントは全て /api から始まる
 public class AuthController {
-    HttpSession session;
+   
     
-    
-
     @Autowired//必要なクラスのインスタンスを自動
     private UserService userService;
 
+HttpSession session;
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password, HttpServletRequest request) {
         User user = userService.findByEmail(email);// emailでユーザーを検索
@@ -38,7 +37,6 @@ public class AuthController {
         }
         return new ResponseEntity<>("Invalid email or password", HttpStatus.UNAUTHORIZED);
     }
-    
 
     @PostMapping("/register")
     public String register(@RequestParam String email, @RequestParam String username, @RequestParam String password, HttpServletRequest request) {
@@ -86,7 +84,7 @@ public class AuthController {
             newUser.setPr(pr);
             session.removeAttribute("user");
             session.setAttribute("user", newUser);
-            userService.UpdataUser(newUser);
+            userService.UpdateUser(newUser);
         }
         catch(NumberFormatException e){
             newUser.setUsername("Error");
