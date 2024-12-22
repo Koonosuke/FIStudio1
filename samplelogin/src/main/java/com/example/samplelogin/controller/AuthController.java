@@ -1,7 +1,4 @@
 package com.example.samplelogin.controller;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,23 +52,15 @@ public ResponseEntity<?> register(
     return ResponseEntity.status(HttpStatus.CREATED).body("Registration successful");
 }
 @GetMapping("/user")
-public ResponseEntity<?> getUserProfile(HttpServletRequest request) {
-    HttpSession session = request.getSession(false); // 既存のセッションを取得
+public ResponseEntity<?> getUserName(HttpServletRequest request) {
+    HttpSession session = request.getSession(false); // 既存のセッションを取得（存在しない場合はnullを返す）
     if (session != null) {
         User user = (User) session.getAttribute("user");
         if (user != null) {
-            // 必要なデータを Map に格納して返す
-            Map<String, Object> userData = new HashMap<>();
-            userData.put("username", user.getUsername());
-            userData.put("email", user.getEmail());
-            userData.put("grade", user.getGrade());
-            userData.put("pr", user.getPr());
-            return ResponseEntity.ok(userData);
+            return ResponseEntity.ok(user);
         }
     }
-    // セッションがない場合やユーザーが見つからない場合
-    return ResponseEntity.status(HttpStatus.FORBIDDEN)
-            .body(new ErrorResponse("User not found or not logged in"));
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("Not found or not logged in"));
 }
 
     @PostMapping("/edit")
