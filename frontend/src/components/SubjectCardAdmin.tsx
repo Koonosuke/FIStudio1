@@ -16,6 +16,7 @@ interface Subject {
   subjectName: string;
   teacherName: string;
   year: number;
+  onDelete: (id: number) => void;
 }
 
 const SubjectCard: React.FC<Subject> = ({
@@ -23,6 +24,7 @@ const SubjectCard: React.FC<Subject> = ({
   subjectName,
   teacherName,
   year,
+  onDelete,
 }) => {
   const [currentContents, setCurrentContents] = useState<Content[]>([]);
   const [showForm, setShowForm] = useState(false);
@@ -31,7 +33,6 @@ const SubjectCard: React.FC<Subject> = ({
   const [newPastExams, setNewPastExams] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [expanded, setExpanded] = useState(false); // 展開状態を管理
-
   // 投稿を取得する処理]
   useEffect(() => {
     const fetchContents = async () => {
@@ -62,6 +63,7 @@ const SubjectCard: React.FC<Subject> = ({
   const handleAddContent = async () => {
     try {
       const contentData = {
+        subjectId: id,
         content: newContent,
         evaluation: newEvaluation,
         pastExams: newPastExams,
@@ -91,7 +93,6 @@ const SubjectCard: React.FC<Subject> = ({
       console.error("Error adding content:", error);
     }
   };
-
   const renderStars = (rating: number) => {
     return (
       <div style={{ display: "flex", alignItems: "center" }}>
@@ -160,6 +161,13 @@ const SubjectCard: React.FC<Subject> = ({
           {expanded ? "閉じる" : "もっと見る"}
         </button>
       )}
+      {/* 削除ボタン */}
+      <button
+        className="delete-button"
+        onClick={() => onDelete(id)}
+        >
+          削除
+        </button>
     </div>
   );
 };

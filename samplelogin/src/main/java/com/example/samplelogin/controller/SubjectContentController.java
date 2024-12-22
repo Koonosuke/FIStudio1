@@ -13,7 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.samplelogin.dto.SubjectContentRequestDTO;
 import com.example.samplelogin.model.SubjectContent;
+import com.example.samplelogin.model.User;
 import com.example.samplelogin.service.SubjectContentService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/subjects/{subjectId}/contents")
@@ -30,15 +34,25 @@ public class SubjectContentController {
 
     @PostMapping
     public SubjectContent addContent(
-        @RequestBody SubjectContentRequestDTO requestDTO
+        @PathVariable Long subjectId,
+        @RequestBody SubjectContentRequestDTO requestDTO,
+        HttpServletRequest request
     ) {
-        if (requestDTO.getUserId() == null || requestDTO.getUsername() == null) {
+        HttpSession session = request.getSession(false);
+        User user = (User)session.getAttribute("user");
+        Long userId = user.getId();
+        String username = user.getUsername();
+
+        if (userId == null || username == null) {
             throw new IllegalStateException("ユーザー情報を取得できませんでした");
         }
-        SubjectContent content = requestDTO.getContent();
-        content.setSubjectId(requestDTO.getSubjectId());
-        content.setUserId(requestDTO.getUserId()); // ユーザIDを設定
-        content.setUserName(requestDTO.getUsername()); // ユーザ名を設定
+        SubjectContent content = new SubjectContent();
+        content.setSubjectId(subjectId);
+        content.setUserId(userId); // ユーザIDを設定
+        content.setUserName(username); // ユーザ名を設定
+        content.setContent(requestDTO.getContent());
+        content.setEvaluation(requestDTO.getEvaluation());
+        content.setPastExams(requestDTO.getPastExams());
         return subjectContentService.saveContent(content);
     }
 }
