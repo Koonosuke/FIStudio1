@@ -41,6 +41,7 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
                     "/api/register",
                     "/api/users",
                     "/api/user",
+                    "/api/userDelete",
                     "/api/user/**",
                     "/api/messages/**",
                     "/api/subjects/**",
