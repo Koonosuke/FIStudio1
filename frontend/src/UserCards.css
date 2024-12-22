@@ -2,7 +2,7 @@
 .user-profile-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 40px; /* カード間の間隔を広げる */
+  gap: 40px;
   padding: 20px;
   background-color: #00343f;
 }
@@ -26,6 +26,20 @@
   padding: 16px;
   text-align: center;
   transition: transform 0.6s;
+}
+.tap-button {
+  padding: 10px 20px;
+  font-size: 14px;
+  background-color: #3498db; /* 青色 */
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.tap-button:hover {
+  background-color: #2980b9; /* 濃い青色 */
 }
 
 .user-profile-card .card-front {
@@ -55,7 +69,7 @@
 }
 
 .user-profile-card .card-back h3 {
-  color: #ffffff;
+  color: #f8f2f2;
 }
 
 /* カードの本文 */
@@ -66,12 +80,33 @@
 }
 
 .user-profile-card .card-back p {
+  color: #171616;
+}
+
+/* 戻るボタン */
+.user-profile-card .back-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 6px 12px;
+  background-color: #ffffff;
+  color: #00343f;
+  border: 1px solid #00343f;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.user-profile-card .back-button:hover {
+  background-color: #00343f;
   color: #ffffff;
 }
 
-/* ボタンのスタイル */
-.user-profile-card button {
-  margin-top: 20px;
+/* もっと見るボタン */
+.user-profile-card .load-more-button {
+  margin-right: auto;
   padding: 10px 20px;
   background-color: #0056b3;
   color: white;
@@ -82,8 +117,50 @@
   transition: background-color 0.3s ease;
 }
 
-.user-profile-card button:hover {
+.user-profile-card .load-more-button:hover {
   background-color: #003d80;
+}
+
+/* 閉じるボタン */
+.user-profile-card .close-button {
+  margin-left: auto;
+  padding: 10px 20px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.user-profile-card .close-button:hover {
+  background-color: #b02a37;
+}
+
+/* ボタンコンテナ */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+/* コンテンツエリア */
+.content-item {
+  text-align: left;
+  margin: 10px 0;
+  padding: 10px;
+  background-color: #f8f9fa;
+  color: #000000;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 評価（星）のスタイル */
+.star {
+  color: gold;
+  font-size: 16px;
+  margin-right: 2px;
 }
 
 /* レスポンシブデザイン */
@@ -105,21 +182,23 @@
     font-size: 12px;
   }
 }
-/* .search-bar {
-  text-align: center;
-  margin: 20px 0;
-} */
-
-.search-input {
-  width: 50%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 16px;
+.dm-button {
+  padding: 10px 20px;
+  background-color: #1e90ff; /* 青色 */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 10px;
 }
 
-.search-input:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+.dm-button:hover {
+  background-color: #1c86ee;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
 }

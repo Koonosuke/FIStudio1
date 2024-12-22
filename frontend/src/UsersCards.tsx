@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./UserCards.css";
 import Header from "./components/Header";
 
@@ -14,31 +15,33 @@ interface User {
 
 interface Content {
   id: number;
-  subjectName: string;
   content: string;
-  evaluation: number;
+  evaluation: number; // 評価は1〜5
   pastExams: string;
   createdAt: string;
 }
 
 const UserCards: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]); // 絞り込み後のユーザ
-  const [searchQuery, setSearchQuery] = useState<string>(""); // 検索クエリ
+  const [contents, setContents] = useState<Record<number, Content[]>>({});
+  const [visibleContentCount, setVisibleContentCount] = useState<
+    Record<number, number>
+  >({});
   const [flippedCards, setFlippedCards] = useState<Record<number, boolean>>({});
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/api/users`, {
           method: "GET",
+          credentials: "include",
           headers: { "Content-Type": "application/json" },
         });
         if (!response.ok) throw new Error("Failed to fetch users");
-
         const data = await response.json();
         setUsers(data);
-        setFilteredUsers(data); // 初期表示では全ユーザを表示
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -47,27 +50,66 @@ const UserCards: React.FC = () => {
     fetchUsers();
   }, []);
 
+  const fetchUserContents = async (userId: number) => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/subjects/contents/user/${userId}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      if (!response.ok) throw new Error("Failed to fetch user contents");
+      const data = await response.json();
+      setContents((prev) => ({ ...prev, [userId]: data }));
+      setVisibleContentCount((prev) => ({ ...prev, [userId]: 1 }));
+    } catch (error) {
+      console.error("Error fetching user contents:", error);
+    }
+  };
+
   const toggleCardFlip = (userId: number) => {
     setFlippedCards((prev) => ({
       ...prev,
       [userId]: !prev[userId],
     }));
+    if (!contents[userId]) fetchUserContents(userId);
   };
 
-  // 検索処理
+  const loadMoreContents = (userId: number) => {
+    setVisibleContentCount((prev) => ({
+      ...prev,
+      [userId]: prev[userId] + 1,
+    }));
+  };
+
+  const closeContents = (userId: number) => {
+    setVisibleContentCount((prev) => ({ ...prev, [userId]: 1 })); // 投稿を1件だけ表示に戻す
+  };
+
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value.toLowerCase();
-    setSearchQuery(query);
+    setSearchQuery(event.target.value.toLowerCase());
+  };
 
-    const filtered = users.filter(
-      (user) =>
-        user.username.toLowerCase().includes(query) ||
-        user.email.toLowerCase().includes(query) ||
-        user.grade.toString().includes(query) ||
-        user.pr.toLowerCase().includes(query)
-    );
+  const handleDMClick = (userEmail: string) => {
+    navigate(`/direct-message/${userEmail}`); // DM画面に遷移
+  };
 
-    setFilteredUsers(filtered);
+  const filteredUsers = users.filter(
+    (user) =>
+      user.username.toLowerCase().includes(searchQuery) ||
+      user.email.toLowerCase().includes(searchQuery) ||
+      user.grade.toString().includes(searchQuery) ||
+      user.pr.toLowerCase().includes(searchQuery)
+  );
+
+  const renderStars = (count: number) => {
+    return Array.from({ length: count }, (_, index) => (
+      <span key={index} className="star">
+        ★
+      </span>
+    ));
   };
 
   return (
@@ -95,14 +137,58 @@ const UserCards: React.FC = () => {
               <p>Email: {user.email}</p>
               <p>Grade: {user.grade}</p>
               <p>PR: {user.pr}</p>
-              <button onClick={() => toggleCardFlip(user.id)}>
-                ここをタップ
-              </button>
+              <div className="button-container">
+                <button
+                  className="dm-button"
+                  onClick={() => handleDMClick(user.email)}
+                >
+                  DM
+                </button>
+                <button
+                  className="tap-button"
+                  onClick={() => toggleCardFlip(user.id)}
+                >
+                  詳細を見る
+                </button>
+              </div>
             </div>
             <div className="card-back">
+              <button
+                className="back-button"
+                onClick={() => toggleCardFlip(user.id)}
+              >
+                戻る
+              </button>
               <h3>{user.username} の投稿</h3>
-              <p>ここでAPI読みだして科目の投稿取得</p>
-              <button onClick={() => toggleCardFlip(user.id)}>戻る</button>
+              {contents[user.id]
+                ?.slice(0, visibleContentCount[user.id] || 0)
+                .map((content) => (
+                  <div key={content.id} className="content-item">
+                    <p>内容: {content.content}</p>
+                    <p>評価: {renderStars(content.evaluation)}</p>
+                    <p>試験情報: {content.pastExams}</p>
+                    <p>投稿日: {content.createdAt}</p>
+                  </div>
+                ))}
+              <div className="button-container">
+                {contents[user.id] &&
+                  visibleContentCount[user.id]! < contents[user.id].length && (
+                    <button
+                      className="load-more-button"
+                      onClick={() => loadMoreContents(user.id)}
+                    >
+                      もっと見る
+                    </button>
+                  )}
+                {contents[user.id] && visibleContentCount[user.id]! > 1 && (
+                  <button
+                    className="close-button"
+                    onClick={() => closeContents(user.id)}
+                  >
+                    閉じる
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         ))}

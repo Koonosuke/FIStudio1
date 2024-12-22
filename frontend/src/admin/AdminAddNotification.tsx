@@ -6,7 +6,6 @@ import HeaderAdmin from "../components/HeaderAdmin";
 interface User {
   id: Int16Array;
 }
-
 function AdminAddNotification() {
   const [subject, setSubject] = useState("");
   const [value, setValue] = useState("");
