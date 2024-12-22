@@ -162,52 +162,6 @@ const SubjectList: React.FC = () => {
                 <SubjectCard key={subject.id} {...subject} />
               ))}
             </div>
-            {/* 科目追加フォーム */}
-            <form
-              onSubmit={handleSubmit}
-              className="subject-add-form mt-8 bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto"
-            >
-              <h3 className="form-title text-lg font-bold mb-4">科目を追加</h3>
-              {errorMessage && (
-                <div className="error-message text-red-600 mb-4">
-                  {errorMessage}
-                </div>
-              )}
-              <input
-                type="text"
-                name="subjectName"
-                placeholder="科目名"
-                value={form.subjectName}
-                onChange={handleInputChange}
-                className="input-field w-full mb-4 p-2 border rounded"
-                required
-              />
-              <input
-                type="text"
-                name="teacherName"
-                placeholder="教員名"
-                value={form.teacherName}
-                onChange={handleInputChange}
-                className="input-field w-full mb-4 p-2 border rounded"
-                required
-              />
-              <input
-                type="number"
-                name="year"
-                placeholder="年度"
-                value={form.year}
-                onChange={handleInputChange}
-                className="input-field w-full mb-4 p-2 border rounded"
-                required
-              />
-              <button
-                type="submit"
-                className="submit-button w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
-                disabled={loading}
-              >
-                {loading ? "追加中..." : "追加"}
-              </button>
-            </form>
           </>
         ) : (
           <h3 className="text-center text-lg font-bold text-gray-700">
