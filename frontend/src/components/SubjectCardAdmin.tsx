@@ -113,28 +113,6 @@ const SubjectCard: React.FC<Subject> = ({
       <h3>{subjectName}</h3>
       <p>担当教員: {teacherName}</p>
       <p>受講年度: {year}</p>
-      <button onClick={() => setShowForm(!showForm)}>コメントを追加</button>
-      {showForm && (
-        <div className="add-content-form">
-          <textarea
-            placeholder="授業内容"
-            value={newContent}
-            onChange={(e) => setNewContent(e.target.value)}
-          />
-          <input
-            type="number"
-            placeholder="評価 (0-5)"
-            value={newEvaluation}
-            onChange={(e) => setNewEvaluation(Number(e.target.value))}
-          />
-          <textarea
-            placeholder="過去問情報"
-            value={newPastExams}
-            onChange={(e) => setNewPastExams(e.target.value)}
-          />
-          <button onClick={handleAddContent}>投稿</button>
-        </div>
-      )}
       <div className={`contents-list ${expanded ? "expanded" : "collapsed"}`}>
         <h4>投稿内容:</h4>
         {currentContents.length > 0 ? (
