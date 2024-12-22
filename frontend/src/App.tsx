@@ -1,9 +1,12 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import AddNotification from "./AddNotification";
 import AdminAddNotification from "./admin/AdminAddNotification";
+import AdminChatList from "./admin/AdminChatList";
 import AdminNotification from "./admin/AdminNotification";
 import Admins from "./admin/Admins";
 import AdminSentNotification from "./admin/AdminSentNotification";
+import AdminSubject from "./admin/AdminSubject";
+import AdminUserList from "./admin/AdminUserList";
 import ChatList from "./ChatList";
 import DirectMessage from "./DirectMessage"; // DirectMessageコンポーネントをインポート
 import Home from "./Home";
@@ -29,6 +32,10 @@ function App() {
         <Route path="/chat" element={<ChatList />} />
         <Route path="/admin" element={<Admins />} />
         <Route path="/notificationAdmin" element={<AdminNotification />} />
+        <Route path="/subjectsAdmin" element={<AdminSubject />} />
+        <Route path="/user-listAdmin" element={<AdminUserList />} />
+        <Route path="/chatAdmin" element={<AdminChatList/>} />
+
         <Route
           path="/notificationAdmin/add"
           element={<AdminAddNotification />}
