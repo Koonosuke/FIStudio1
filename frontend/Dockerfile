@@ -1,20 +1,23 @@
-# 1. Node.jsを使ってアプリケーションをビルド
 FROM node:20-alpine AS build
 
-# 作業ディレクトリを設定
 WORKDIR /app
 
-# package.json と lock ファイルをコピー
 COPY package.json package-lock.json ./
 
-# 依存関係をインストール
+RUN apk add --no-cache bash git
+
 RUN npm install
 
-# アプリケーションコードをコピー
 COPY . .
 
-# アプリケーションをビルド
 RUN npm run build
 
-# Nginxを起動
-CMD ["npm","start"]
+FROM nginx:1.25-alpine
+
+COPY --from=build /app/build /usr/share/nginx/html
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
