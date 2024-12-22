@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.example.samplelogin.model.Subject;
 import com.example.samplelogin.repository.SubjectRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class SubjectService {
 
@@ -40,6 +42,7 @@ public class SubjectService {
         return subjectRepository.save(subject);
     }
 
+    @Transactional
     public void deleteSubject(Long id) {
         Subject subject = getSubjectById(id);
         subjectRepository.delete(subject);

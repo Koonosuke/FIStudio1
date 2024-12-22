@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../components/HeaderAdmin";
 import SubjectCard from "../components/SubjectCardAdmin";
+import SubjectConfirmDialog from "../components/SubjectConfirmDialog";
 import "./AdminSubject.css";
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 interface Content {
@@ -33,7 +35,9 @@ const AdminSubject: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [currentUser, setCurrentUser] = useState<any>(null);
-
+  const navigate = useNavigate();
+  const [confirmDialogVisibie, setConfirmDialogVisible] = useState(false);
+  const [subjectToDelete, setSubjectToDelete] = useState<number | null>(null);
   // 現在のユーザー情報を取得
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -140,6 +144,35 @@ const AdminSubject: React.FC = () => {
     }
   };
 
+  const handleConfirmDelete = async (subjectId: number) =>{
+    setConfirmDialogVisible(false);
+      try{
+        const response = await fetch(
+          `${API_BASE_URL}/api/subjects/${subjectId}`,{
+            method:`DELETE`,
+            credentials: "include"
+          }
+        );
+        if(response.ok){
+          alert("Subject is deleted!");
+          setSubjects((prev) => prev.filter((subject) => subject.id !== subjectId));
+        }else{
+          alert("Delete failed.");
+        }
+      }catch(error){
+        console.error("Error deleting subject:", error);
+        alert("Network error occurred. Please try again.");
+      }
+    };
+    const showConfirmDialog = (subjectId: number) => {
+      setSubjectToDelete(subjectId);
+      setConfirmDialogVisible(true);
+    };
+    const handleCancelDelete = () => {
+      setConfirmDialogVisible(false);
+      setSubjectToDelete(null);
+    };
+
   return (
     <div className="bg-gray-100 min-h-screen">
       <Header />
@@ -158,10 +191,24 @@ const AdminSubject: React.FC = () => {
             </div>
 
             <div className="subject-list">
-              {filteredSubjects.map((subject) => (
-                <SubjectCard key={subject.id} {...subject} />
-              ))}
-            </div>
+            {filteredSubjects.map((subject) => (
+              <div key={subject.id} className="subject-item">
+                <SubjectCard
+                  {...subject}
+                  onDelete={handleConfirmDelete} 
+                />
+              </div>
+            ))}
+          </div>
+          {/* 確認ダイアログ */}
+          {confirmDialogVisibie && subjectToDelete !== null && (
+              <SubjectConfirmDialog
+                message="Are you Sure you want to delete this subject?"
+                subjectId={subjectToDelete}
+                onConfirm={handleConfirmDelete}
+                onCancel={handleCancelDelete}
+                />
+            )}
             {/* 科目追加フォーム */}
             <form
               onSubmit={handleSubmit}
