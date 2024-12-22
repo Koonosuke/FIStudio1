@@ -33,10 +33,10 @@ public class SubjectService {
         subject.setSubjectName(subjectDetails.getSubjectName());
         subject.setTeacherName(subjectDetails.getTeacherName());
         subject.setYear(subjectDetails.getYear());
-        subject.setUserId(subjectDetails.getUserId());
-        subject.setContent(subjectDetails.getContent());
-        subject.setEvaluation(subjectDetails.getEvaluation());
-        subject.setPastExams(subjectDetails.getPastExams());
+        //subject.setUserId(subjectDetails.getUserId());
+        //subject.setContent(subjectDetails.getContent());
+        //subject.setEvaluation(subjectDetails.getEvaluation());
+        //subject.setPastExams(subjectDetails.getPastExams());
         return subjectRepository.save(subject);
     }
 

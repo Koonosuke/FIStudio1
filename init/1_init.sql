@@ -20,12 +20,7 @@ CREATE TABLE subjects (
     id BIGSERIAL PRIMARY KEY,
     subject_name VARCHAR(255) NOT NULL,
     teacher_name VARCHAR(255) NOT NULL,
-    year INTEGER NOT NULL,
-    content TEXT,
-    evaluation INTEGER,
-    past_exams TEXT,
-    user_id VARCHAR(255) NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id),
+    year INTEGER NOT NULL
 );
 
 CREATE TABLE subject_contents (
@@ -36,6 +31,7 @@ CREATE TABLE subject_contents (
     evaluation INTEGER CHECK (evaluation >= 0 AND evaluation <= 5),
     past_exams VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_name VARCHAR(255) NOT NULL,
     FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

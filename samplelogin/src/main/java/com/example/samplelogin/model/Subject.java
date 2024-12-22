@@ -24,9 +24,9 @@ public class Subject {
 
     @Column(nullable = false)
     private int year;
-
+    /*
     @Column(name = "user_id", nullable = false)
-    private String userId;
+    private Long userId;
 
     @Column(columnDefinition = "TEXT", nullable = true) // content をオプションにする
     private String content;
@@ -36,31 +36,24 @@ public class Subject {
 
     @Column(name = "past_exams", columnDefinition = "TEXT", nullable = true) // pastExams をオプションにする
     private String pastExams;
-
+ */
     // コンストラクタ
     public Subject() {
     }
 
-    public Subject(String subjectName, String teacherName, int year, String userId, String content, Integer evaluation, String pastExams) {
+    public Subject(String subjectName, String teacherName, int year) {
         this.subjectName = subjectName;
         this.teacherName = teacherName;
         this.year = year;
-        this.userId = userId;
-        this.content = content;
-        this.evaluation = evaluation;
-        this.pastExams = pastExams;
     }
 
     // 必須フィールドのみのコンストラクタ
-    public Subject(String subjectName, String teacherName, int year, String userId) {
+    /*
+    public Subject(String subjectName, String teacherName, int year, Long userId) {
         this.subjectName = subjectName;
         this.teacherName = teacherName;
         this.year = year;
-        this.userId = userId;
-        this.content = "";
-        this.evaluation = 0;
-        this.pastExams = "";
-    }
+    } */
 
     // Getters and Setters
     public Long getId() {
@@ -94,12 +87,12 @@ public class Subject {
     public void setYear(int year) {
         this.year = year;
     }
-
-    public String getUserId() {
+    /*
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -125,7 +118,7 @@ public class Subject {
 
     public void setPastExams(String pastExams) {
         this.pastExams = pastExams;
-    }
+    } */
 
     @Override
     public String toString() {
@@ -134,10 +127,6 @@ public class Subject {
                 ", subjectName='" + subjectName + '\'' +
                 ", teacherName='" + teacherName + '\'' +
                 ", year=" + year +
-                ", userId='" + userId + '\'' +
-                ", content='" + content + '\'' +
-                ", evaluation=" + evaluation +
-                ", pastExams='" + pastExams + '\'' +
                 '}';
     }
 }
