@@ -75,7 +75,7 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:3000");  // ローカルでのReact実行
-        configuration.addAllowedOrigin("http://localhost"); // Docker内のReact実行（修正）
+        configuration.addAllowedOrigin("http://133.20.51.163"); // Docker内のReact実行（修正）
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 許可するHTTPメソッドをリスト化
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);
