@@ -1,11 +1,10 @@
 import { Client } from "@stomp/stompjs";
-import { useEffect, useRef, useState, } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaPaperPlane } from "react-icons/fa";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import SockJS from "sockjs-client";
 import "./DirectMessage.css";
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 interface Message {
   id: number;
   senderEmail: string;
@@ -22,8 +21,7 @@ function DirectMessage() {
   const [isConnected, setIsConnected] = useState(false);
   const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(null);
   const stompClientRef = useRef<Client | null>(null);
-  const navigate = useNavigate();
-
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   useEffect(() => {
     // ログイン中のユーザーを取得
     fetch(`${API_BASE_URL}/api/user`, {
@@ -116,12 +114,9 @@ function DirectMessage() {
 
   // メッセージを既読にする処理
   const markMessageAsRead = (messageId: number) => {
-    fetch(
-      `${API_BASE_URL}/api/messages/mark-as-read?messageId=${messageId}`,
-      {
-        method: "POST",
-      }
-    )
+    fetch(`${API_BASE_URL}/api/messages/mark-as-read?messageId=${messageId}`, {
+      method: "POST",
+    })
       .then(() => {
         // 既読状態をリアルタイムで通知
         stompClientRef.current?.publish({
@@ -161,19 +156,9 @@ function DirectMessage() {
     }
   };
 
-  const goBack = () => {
-    navigate(-1);
-  };
-
   return (
     <div className="chat-container">
-      <div className="navBar">
-        <div className="backButton">
-          <h2  onClick={goBack}><u>Back</u></h2>
-        </div>
-        <h2>Direct Messages with {receiverEmail}</h2>
-      </div>
-      
+      <h2>Direct Messages with {receiverEmail}</h2>
       <div className="message-list">
         {messages.map(
           (message, index) =>

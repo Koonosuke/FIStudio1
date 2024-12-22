@@ -4,18 +4,14 @@ package com.example.samplelogin.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.example.samplelogin.model.User;
-import com.example.samplelogin.repository.NotificationRepository;
 import com.example.samplelogin.repository.UserRepository;
 
 @Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private NotificationRepository notificationRepository;
     
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -37,9 +33,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    @Transactional
     public void DeleteUser(User user) {
-        notificationRepository.deleteByUserId(user.getId());
         userRepository.delete(user);
     }
 

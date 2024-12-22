@@ -5,9 +5,7 @@ import { useNavigate } from "react-router-dom";
 import SockJS from "sockjs-client";
 import "./ChatList.css";
 import Header from "./components/Header";
-
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-
 interface User {
   username: string;
   email: string;

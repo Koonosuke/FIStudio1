@@ -21,19 +21,21 @@ public class MessageRestController {
     @Autowired
     private MessageService messageService;
 
-    @GetMapping("/latest")
+    @GetMapping("/latest")//最新のメッセージを取得
     public Optional<Message> getLatestMessage(@RequestParam String userEmail1, @RequestParam String userEmail2) {
         return messageService.getLatestMessageBetweenUsers(userEmail1, userEmail2);
     }
 
-    @GetMapping("/conversation")
+    @GetMapping("/conversation")//すべてのメッセージ履歴
+
     public List<Message> getConversation(@RequestParam String userEmail1, @RequestParam String userEmail2) {
         return messageService.getMessagesBetweenUsers(userEmail1, userEmail2);
     }
+
+    //これREST通信で同期通信だからリアルタイム通信にかえる
     @PostMapping("/mark-as-read")
 public ResponseEntity<?> markMessageAsRead(@RequestParam Long messageId) {
     messageService.markMessageAsRead(messageId);
     return ResponseEntity.ok().build();
 }
-
 }

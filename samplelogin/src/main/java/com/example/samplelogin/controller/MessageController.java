@@ -1,4 +1,6 @@
 // MessageController.java
+
+//SpringのSTOMPプロトコルを使用しておるぞい
 package com.example.samplelogin.controller;
 
 import java.time.LocalDateTime;
@@ -17,7 +19,7 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
-    @MessageMapping("/chat.sendMessage")
+    @MessageMapping("/chat.sendMessage")//メッセージを受け取り、データベースに保存し、クライアントにブロードキャスト
     @SendTo("/topic/public")
     public Message sendMessage(Message message) {
         message.setSentAt(LocalDateTime.now());
@@ -25,8 +27,9 @@ public class MessageController {
         messageService.saveMessage(message.getSenderEmail(), message.getReceiverEmail(), message.getContent());
         return message;
     }
-    @MessageMapping("/chat.markAsRead")
+    @MessageMapping("/chat.markAsRead")//特定のメッセージを既読としてマークし、クライアントに通知
     @SendTo("/topic/read-status")
+    //戻り値がtrueの場合、既読状態の更新が成功
     public Long markAsReadWebSocket(Long messageId) {
         boolean isUpdated = messageService.markMessageAsRead(messageId);
         if (isUpdated) {

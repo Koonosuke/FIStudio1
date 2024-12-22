@@ -5,8 +5,6 @@ import ConfirmDialog from "../components/ComfirmDialog";
 import HeaderAdmin from "../components/HeaderAdmin";
 import "./AdminChatList.css";
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-
 interface User {
   username: string;
   email: string;
@@ -21,7 +19,7 @@ function AdminUserList() {
 
   // ログイン中のユーザーを取得
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/user`, {
+    fetch("http://localhost:8080/api/user", {
       method: "GET",
       credentials: "include",
       headers: {
@@ -41,7 +39,7 @@ function AdminUserList() {
   // ユーザー一覧を取得
   useEffect(() => {
     if (currentUser) {
-      fetch(`${API_BASE_URL}/api/users`, {
+      fetch("http://localhost:8080/api/users", {
         method: "GET",
         credentials: "include",
         headers: {
@@ -59,10 +57,11 @@ function AdminUserList() {
   // ココ確認ダイアログ用の処理
   const handleDelete = (user: User) => {
     setUsers((prevUsers) =>
-      prevUsers.map((u) =>
-        u.email === user.email
-          ? { ...u, isDeleteSet: true }
-          : { ...u, isDeleteSet: false } // 他のユーザーのダイアログを非表示に
+      prevUsers.map(
+        (u) =>
+          u.email === user.email
+            ? { ...u, isDeleteSet: true }
+            : { ...u, isDeleteSet: false } // 他のユーザーのダイアログを非表示に
       )
     );
   };
@@ -71,7 +70,7 @@ function AdminUserList() {
     const body = new URLSearchParams();
     body.append("email", user.email);
     try {
-      const response = await fetch(`${API_BASE_URL}/api/userDelete`, {
+      const response = await fetch("http://localhost:8080/api/userDelete", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
