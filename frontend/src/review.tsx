@@ -46,6 +46,31 @@ const UserContentsPage: React.FC = () => {
 
     fetchUserContents();
   }, []);
+  const handleDelete = async (subjectContentId: number) => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/subjects/${subjectContentId}/delete`,
+        {
+          method: "DELETE",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete content");
+      }
+
+      // ローカルの投稿一覧を更新
+      setUserContents((prevContents) =>
+        prevContents.filter((content) => content.id !== subjectContentId)
+      );
+    } catch (error) {
+      console.error("Error deleting content:", error);
+      alert("削除に失敗しました。");
+    }
+  };
+
 
   const renderStars = (rating: number) => (
     <div style={{ display: "flex", alignItems: "center" }}>
@@ -91,6 +116,12 @@ const UserContentsPage: React.FC = () => {
                   <strong>投稿日:</strong>{" "}
                   {new Date(content.createdAt).toLocaleString()}
                 </p>
+                <button
+                  className="delete-button"
+                  onClick={() => handleDelete(content.id)}
+                >
+                  削除
+                </button>
               </li>
             ))}
           </ul>
