@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import SockJS from "sockjs-client";
 import "./DirectMessage.css";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 interface Message {
   id: number;
   senderEmail: string;
@@ -25,7 +26,7 @@ function DirectMessage() {
 
   useEffect(() => {
     // ログイン中のユーザーを取得
-    fetch("http://localhost:8080/api/user", {
+    fetch(`${API_BASE_URL}/api/user`, {
       method: "GET",
       credentials: "include",
       headers: {
@@ -46,7 +47,7 @@ function DirectMessage() {
     // 過去のメッセージを取得
     if (receiverEmail && currentUserEmail) {
       fetch(
-        `http://localhost:8080/api/messages/conversation?userEmail1=${currentUserEmail}&userEmail2=${receiverEmail}`
+        `${API_BASE_URL}/api/messages/conversation?userEmail1=${currentUserEmail}&userEmail2=${receiverEmail}`
       )
         .then((response) => response.json())
         .then((data) => {
@@ -70,7 +71,7 @@ function DirectMessage() {
     }
 
     // WebSocket接続の初期化
-    const socket = new SockJS("http://localhost:8080/ws");
+    const socket = new SockJS(`${API_BASE_URL}/ws`);
     const stompClient = new Client({
       webSocketFactory: () => socket,
       onConnect: () => {
@@ -116,7 +117,7 @@ function DirectMessage() {
   // メッセージを既読にする処理
   const markMessageAsRead = (messageId: number) => {
     fetch(
-      `http://localhost:8080/api/messages/mark-as-read?messageId=${messageId}`,
+      `${API_BASE_URL}/api/messages/mark-as-read?messageId=${messageId}`,
       {
         method: "POST",
       }

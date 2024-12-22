@@ -7,41 +7,55 @@ import "./ProfileEdit.css";
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 function ProfileEdit() {
+  //const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [grade, setGrade] = useState("");
   const [pr, setPr] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
+  const body = new URLSearchParams();
+  body.append("username", username);
+  body.append("grade", grade);
+  body.append("pr", pr);
+
+  const HandleProfileClic = () => {
+    navigate("/profile");
+  };
+
+  const HandleEditClic = () => {
+    navigate("/profile/edit");
+  };
+
+  const HandleReviewClic = () => {
+    navigate("/profile/review");
+  };
+
+  const HandleAdminClic = () => {
+    navigate("/profile/admin");
+  };
+
   const handleEdit = async () => {
-    setIsLoading(true); // ローディング状態開始
-
-    const body = new URLSearchParams();
-    body.append("username", username);
-    body.append("grade", grade);
-    body.append("pr", pr);
-
     try {
       const response = await fetch(`${API_BASE_URL}/api/edit`, {
         method: "POST",
-        credentials: "include",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: body.toString(),
+        body: body.toString(), //エンコードされたデータを送信
       });
 
       if (response.ok) {
-        navigate("/profile"); // プロフィール画面に戻る
+        const text = await response.text();
+        navigate("/profile"); // プロフィール画面に戻って変化を確認する
       } else {
-        const errorData = await response.json().catch(() => null);
-        alert(errorData?.message || "Profile update failed.");
+        const errorData = await response.json(); // エラーメッセージを取得
+        alert(errorData.message || "Profile update failed.");
       }
     } catch (error) {
+      console.error("Login failed:", error);
       alert("Network error occurred. Please try again.");
-    } finally {
-      setIsLoading(false); // ローディング状態終了
+      navigate("/profile");
     }
   };
 
@@ -55,7 +69,7 @@ function ProfileEdit() {
             Username <br />
             <input
               type="text"
-              placeholder="Username"
+              placeholder="Usename"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
@@ -64,7 +78,7 @@ function ProfileEdit() {
           <h2>
             Grade <br />
             <input
-              type="number"
+              type="text"
               placeholder="Grade"
               value={grade}
               onChange={(e) => setGrade(e.target.value)}
@@ -81,22 +95,20 @@ function ProfileEdit() {
             ></textarea>
           </h2>
 
-          <button onClick={handleEdit} disabled={isLoading}>
-            {isLoading ? "Updating..." : "Edit"}
-          </button>
+          <button onClick={handleEdit}>Edit</button>
         </div>
 
         <div id="buttons">
-          <div className="button" onClick={() => navigate("/profile")}>
+          <div className="button" onClick={() => HandleProfileClic()}>
             <p>Home</p>
           </div>
-          <div className="button" onClick={() => navigate("/profile/edit")}>
+          <div className="button" onClick={() => HandleEditClic()}>
             <p>Edit</p>
           </div>
-          <div className="button" onClick={() => navigate("/profile/review")}>
+          <div className="button" onClick={() => HandleReviewClic()}>
             <p>Review</p>
           </div>
-          <div className="button" onClick={() => navigate("/profile/admin")}>
+          <div className="button" onClick={() => HandleAdminClic()}>
             <p>Admin</p>
           </div>
         </div>

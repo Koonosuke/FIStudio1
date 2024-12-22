@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import "./SubjectList.css";
-import Header from "./components/Header";
-import SubjectCard from "./components/SubjectCard";
+import Header from "../components/HeaderAdmin";
+import SubjectCard from "../components/SubjectCardAdmin";
+import "./AdminSubject.css";
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-
 interface Content {
   id: number;
   content: string;
@@ -22,7 +21,7 @@ interface Subject {
   contents: Content[];
 }
 
-const SubjectList: React.FC = () => {
+const AdminSubject: React.FC = () => {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [filteredSubjects, setFilteredSubjects] = useState<Subject[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -220,4 +219,4 @@ const SubjectList: React.FC = () => {
   );
 };
 
-export default SubjectList;
+export default AdminSubject;

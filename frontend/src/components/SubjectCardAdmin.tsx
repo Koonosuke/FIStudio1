@@ -18,12 +18,6 @@ interface Subject {
   year: number;
 }
 
-interface User{
-  id: number;
-  email: String;
-  username: String;
-}
-
 const SubjectCard: React.FC<Subject> = ({
   id,
   subjectName,
@@ -37,7 +31,6 @@ const SubjectCard: React.FC<Subject> = ({
   const [newPastExams, setNewPastExams] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [expanded, setExpanded] = useState(false); // 展開状態を管理
-  const [user, setUser] = useState<User | null>(null);
 
   // 投稿を取得する処理]
   useEffect(() => {
@@ -51,9 +44,11 @@ const SubjectCard: React.FC<Subject> = ({
             headers: { "Content-Type": "application/json" },
           }
         );
+
         if (!response.ok) {
           throw new Error("投稿の取得に失敗しました");
         }
+
         const data = await response.json();
         setCurrentContents(data);
       } catch (error) {
@@ -64,37 +59,12 @@ const SubjectCard: React.FC<Subject> = ({
     fetchContents();
   }, [id]);
 
-  //現在のユーザ情報を取得(コンテンツ追加時に使用するため)
-  useEffect(() => {
-    const response = fetch(`${API_BASE_URL}/api/user`,{
-      method: "GET",
-      credentials: "include",
-    })
-    .then((response) => {
-      if(!response.ok){
-        throw new Error("User data fetch failed");
-      }
-      return response.json();
-    })
-    .then((data)=>{
-      setUser(data);
-    })
-    .catch((error)=>{
-      console.error("Error fetching user info: ", error);
-    })
-  },[]);
   const handleAddContent = async () => {
     try {
       const contentData = {
-        userId: user?.id,
-        username: user?.username,
-        subjectId: id,
-        content:{
-          content: newContent,
-          evaluation: newEvaluation,
-          pastExams: newPastExams,
-      
-        },
+        content: newContent,
+        evaluation: newEvaluation,
+        pastExams: newPastExams,
       };
 
       const response = await fetch(
@@ -154,14 +124,8 @@ const SubjectCard: React.FC<Subject> = ({
             type="number"
             placeholder="評価 (0-5)"
             value={newEvaluation}
-            onChange={(e) => {
-              const value = Number(e.target.value);
-              if (value >= 0 && value <= 5) {
-                setNewEvaluation(value);
-              }
-            }}
+            onChange={(e) => setNewEvaluation(Number(e.target.value))}
           />
-
           <textarea
             placeholder="過去問情報"
             value={newPastExams}
