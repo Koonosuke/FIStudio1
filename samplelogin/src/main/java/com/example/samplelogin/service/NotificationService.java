@@ -52,4 +52,12 @@ public class NotificationService {
         System.out.println("Fetching notifications for userId: "+ sendingUserId);
         return notificationRepository.getUserIdNotifications(sendingUserId);
     }
+
+    //指定されたお知らせIDのお知らせを削除する
+    public void deleteNotification(Long notificationId){
+        if(!notificationRepository.existsById(notificationId)){
+            throw new IllegalArgumentException("Notification with ID " + notificationId + " not found. ");
+        }
+        notificationRepository.deleteById(notificationId);
+    }
 }

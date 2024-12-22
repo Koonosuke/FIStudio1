@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import HeaderAdmin from "../components/HeaderAdmin";
 import "../Notification.css";
 interface Notification {
+  notificationId: number;
   subject: string;
   value: string;
 }
@@ -33,6 +34,28 @@ function AdminNotification() {
     };
     fetchNotifications();
   }, []);
+  const handleDelete = async (notificationId: number) => {
+    try{
+      const response = await fetch(
+        `http://localhost:8080/api/notifications/self/${notificationId}/delete`,
+        {
+          method: "DELETE",
+          headers:{
+            "Content-Type": "application/json",
+          },
+          credentials:"include",
+        }
+      );
+      if(!response.ok){
+        throw new Error("Failed to delete notification");
+      }
+      setNotifications((prevNotifications) =>
+        prevNotifications.filter((notification) => notification.notificationId !== notificationId)
+    );
+    }catch(error){
+      console.error("Error deleting notification: ", error);
+    }
+  }
   return (
     <div>
       <HeaderAdmin />
@@ -64,6 +87,12 @@ function AdminNotification() {
                   <h2>件名:{notice.subject}</h2>
                 </p>
                 <p className="body">内容:{notice.value}</p>
+              <button
+              className="delete-button"
+              onClick={() => handleDelete(notice.notificationId)}
+              >
+                削除
+              </button>
               </div>
             ))
           ) : (
