@@ -4,6 +4,7 @@ import { FaPaperPlane } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import SockJS from "sockjs-client";
 import "./DirectMessage.css";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 interface Message {
   id: number;
@@ -21,7 +22,7 @@ function DirectMessage() {
   const [isConnected, setIsConnected] = useState(false);
   const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(null);
   const stompClientRef = useRef<Client | null>(null);
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+  
   useEffect(() => {
     // ログイン中のユーザーを取得
     fetch(`${API_BASE_URL}/api/user`, {

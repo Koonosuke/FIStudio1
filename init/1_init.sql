@@ -20,7 +20,12 @@ CREATE TABLE subjects (
     id BIGSERIAL PRIMARY KEY,
     subject_name VARCHAR(255) NOT NULL,
     teacher_name VARCHAR(255) NOT NULL,
-    year INTEGER NOT NULL
+    year INTEGER NOT NULL,
+    content TEXT,
+    evaluation INTEGER,
+    past_exams TEXT,
+    user_id VARCHAR(255) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
 );
 
 CREATE TABLE subject_contents (

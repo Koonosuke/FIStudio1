@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import HeaderAdmin from "../components/HeaderAdmin";
 import "../Notification.css";
-
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 interface Notification {
   notificationId: number;
   subject: string;
@@ -21,7 +21,7 @@ function AdminSentNotification() {
       try {
         const id = String(userId);
         const response = await fetch(
-          `http://localhost:8080/api/notifications/self?userId=${id}`,
+          `${API_BASE_URL}/api/notifications/self?userId=${id}`,
           {
             method: "GET",
             headers: {
@@ -43,7 +43,7 @@ function AdminSentNotification() {
   }, [userId]);
 
   useEffect(() => {
-    const response = fetch("http://localhost:8080/api/user", {
+    const response = fetch(`${API_BASE_URL}/api/user`, {
       method: "GET",
       credentials: "include",
     })
@@ -63,7 +63,7 @@ function AdminSentNotification() {
   const handleDelete = async (notificationId: number) => {
     try{
       const response = await fetch(
-        `http://localhost:8080/api/notifications/self/${notificationId}/delete`,
+        `${API_BASE_URL}/api/notifications/self/${notificationId}/delete`,
         {
           method: "DELETE",
           headers:{

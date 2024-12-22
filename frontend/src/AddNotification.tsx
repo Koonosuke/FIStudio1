@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AddNotification.css";
 import Header from "./components/Header";
-
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 interface User {
   id: Int16Array;
 }
@@ -21,7 +21,7 @@ function AddNotification() {
     }
     const notification = { userId, subject, value };
     try {
-      const response = await fetch("http://localhost:8080/api/notifications", {
+      const response = await fetch(`${API_BASE_URL}/api/notifications`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
@@ -40,7 +40,7 @@ function AddNotification() {
     }
   };
   useEffect(() => {
-    const response = fetch("http://localhost:8080/api/user", {
+    const response = fetch(`${API_BASE_URL}/api/user`, {
       method: "GET",
       credentials: "include",
     })
