@@ -38,6 +38,7 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
                     "api/notifications/self",
                     "/api/notifications",
                     "/api/notifications/self/{notificationIndex}/delete",
+                    "/api/subjects/${subjectContentId}/delete",
                     "/api/edit",
                     "/api/register",
                     "/api/users",

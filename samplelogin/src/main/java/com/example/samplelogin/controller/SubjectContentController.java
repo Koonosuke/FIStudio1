@@ -3,7 +3,9 @@ package com.example.samplelogin.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,19 +21,19 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/api/subjects/{subjectId}/contents")
+@RequestMapping("/api/subjects")
 @CrossOrigin(origins = "http://localhost:3000")
 public class SubjectContentController {
 
     @Autowired
     private SubjectContentService subjectContentService;
 
-    @GetMapping
+    @GetMapping("/{subjectId}/contents")
     public List<SubjectContent> getContentsBySubject(@PathVariable Long subjectId) {
         return subjectContentService.getContentsBySubjectId(subjectId);
     }
 
-    @PostMapping
+    @PostMapping("/{subjectId}/contents")
     public SubjectContent addContent(
         @PathVariable Long subjectId,
         @RequestBody SubjectContent content,
@@ -53,5 +55,16 @@ public class SubjectContentController {
         content.setUserId(user.getId()); // ユーザIDを設定
         content.setUserName(user.getUsername()); // ユーザ名を設定
         return subjectContentService.saveContent(content);
+    }
+    //指定されたIDの科目レビューを削除する
+    @DeleteMapping("/{subjectContentId}/delete")
+    public ResponseEntity<String> deleteSubjectContent(@PathVariable Long subjectContentId){
+        try{
+            subjectContentService.deleteSubjectContent(subjectContentId);
+            return ResponseEntity.ok("SubjectContent deleted successfully");
+        }catch(Exception e){
+            return ResponseEntity.status(500).body("Error deleting subjectContent :" + e.getMessage());
+        }
+
     }
 }

@@ -26,4 +26,11 @@ public class SubjectContentService {
     public List<SubjectContent> getContentsByUserId(Long userId) {
         return subjectContentRepository.findByUserId(userId);
     }
+
+    public void deleteSubjectContent(Long subjectContentId){
+        if(!subjectContentRepository.existsById(subjectContentId)){
+            throw new IllegalArgumentException("SubjectContent with ID "+ subjectContentId + " not found. ");
+        }
+        subjectContentRepository.deleteById(subjectContentId);
+    }
 }
