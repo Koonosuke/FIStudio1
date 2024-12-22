@@ -1,20 +1,22 @@
-FROM node:20-alpine AS build
+#FROM node:20-alpine AS build
 
-WORKDIR /app
+#WORKDIR /app
 
-COPY package.json package-lock.json ./
+#COPY package.json package-lock.json ./
 
-RUN apk add --no-cache bash git
+#RUN apk add --no-cache bash git
 
-RUN npm install
+#RUN npm install
 
-COPY . .
+#COPY . .
 
-RUN npm run build
+#RUN npm run build
 
 FROM nginx:1.25-alpine
 
-COPY --from=build /app/build /usr/share/nginx/html
+WORKDIR /usr/share/nginx/html
+
+COPY build /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
